@@ -164,3 +164,157 @@ You can use "mix" to compile it, test it, and more:
 Run "mix help" for more commands.
 
 ⚠️ Para los ejercicios, trabajarás principalmente en el archivo: lib/exercises1.ex
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Ejercicio 7: match_123
+
+📌 Objetivo:
+
+- Crear una función match_123/1 que reciba una lista y haga pattern matching para devolver los elementos después de [1,2,3].
+
+✍️ Implementación en lib/exercises1.ex
+
+defmodule Sheet1 do
+  def match_123([1, 2, 3 | tail]) do
+    tail
+  end
+end
+
+Ejercicio 8: match_string
+
+📌 Objetivo:
+
+- Crear una función que haga pattern matching con strings.
+
+✍️ Implementación
+
+defmodule Sheet1 do
+  def match_123([1, 2, 3 | tail]), do: tail
+
+  def match_string("Hello " <> name) do
+    name
+  end
+end
+
+Ejercicio 9: match_1234
+
+📌 Objetivo:
+
+- Modificar match_123 para que use el operador ++.
+
+✍️ Implementación
+
+defmodule Sheet1 do
+  def match_123([1, 2, 3 | tail]), do: tail
+
+  def match_string("Hello " <> name), do: name
+
+  def match_1234([1, 2, 3] ++ tail), do: tail
+end
+
+🔍 Pruebas Automáticas
+
+- Crea el archivo test/sheet1_test.exs con:
+
+defmodule Sheet1Test do
+  use ExUnit.Case
+  doctest Sheet1
+
+  test "match_123 works correctly" do
+    assert Sheet1.match_123([1, 2, 3, 4, 5]) == [4, 5]
+  end
+
+  test "match_string works correctly" do
+    assert Sheet1.match_string("Hello world") == "world"
+  end
+end
+
+Ejercicio 4: Variable Binding
+
+📌 Objetivo:
+
+- Investigar el comportamiento de las variables en Elixir respondiendo:
+
+    ¿Qué pasa si una variable no está definida?
+    ¿Qué pasa si una variable se vuelve a asignar?
+
+✍️ Pruebas en iex
+
+- Abre iex con:
+
+    $iex -S mix
+
+1. ¿Qué pasa si una variable no está definida?
+
+    $iex> x
+    ** (CompileError) iex:1: undefined function x/0 (no function clause matching in x/0)
+
+🚀 Explicación:
+
+- En Elixir, una variable debe estar previamente asignada antes de usarse.
+
+2. ¿Qué pasa si una variable se vuelve a asignar?
+
+    $iex> x = 5
+    5
+    $iex> x = 10
+    10
+    $iex> x
+    10
+
+🚀 Explicación:
+
+- Las variables en Elixir no se reasignan, simplemente se enlazan a un nuevo valor.
+
+Ejercicio 5: Tuplas y Listas
+
+📌 Objetivo:
+
+- Responder las siguientes preguntas con código:
+
+    ¿Puedo mezclar tipos en listas y tuplas?
+    ¿Puedo poner tuplas dentro de listas?
+    ¿Puedo poner listas dentro de tuplas?
+
+✍️ Pruebas en iex
+
+    $iex> lista = [1, :ok, "texto", {1,2}]
+    [1, :ok, "texto", {1, 2}]
+    $iex> tupla = {1, [2, 3], "hola"}
+    {1, [2, 3], "hola"}
+
+🚀 Explicación:
+
+- En Elixir puedes mezclar tipos en listas y tuplas.
+- Las tuplas pueden estar dentro de listas y viceversa.
+
+Ejercicio 6: Pattern Matching
+
+📌 Objetivo:
+
+- Entender cómo funciona pattern matching con diferentes situaciones:
+
+    ¿Qué pasa si el patrón es una constante?
+    ¿Qué pasa si el patrón y la expresión no coinciden?
+    ¿Qué pasa si una variable en el patrón ya está vinculada?
+
+✍️ Pruebas en iex
+
+    $iex> 5 = 5
+    5
+    $iex> 5 = 10
+    ** (MatchError) no match of right hand side value: 10
+
+🚀 Explicación:
+
+- Si intentas hacer pattern matching con una constante, debe coincidir con el valor.
+
+    $iex> x = 10
+    $iex> 10 = x
+    10
+    $iex> 5 = x
+    ** (MatchError) no match of right hand side value: 10
+
+🚀 Explicación:
+
+- Si la variable ya tiene un valor asignado, debe coincidir con el patrón.
+
