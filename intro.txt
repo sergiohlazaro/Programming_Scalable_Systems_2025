@@ -142,19 +142,23 @@ $elixir -v                      # Comprobamos que se ha instalado correctamente
 
 ⚠️ Hasta este punto tenemos una breve introducción sobre Elixir y como funciona.
 
+- Tras crear nuestro primer proyeco:
 
+$ mix new exercises1
+    * creating README.md
+    * creating .formatter.exs
+    * creating .gitignore
+    * creating mix.exs
+    * creating lib
+    * creating lib/exercises1.ex
+    * creating test
+    * creating test/test_helper.exs
+    * creating test/exercises1_test.exs
 
+Your Mix project was created successfully.
+You can use "mix" to compile it, test it, and more:
 
+    cd exercises1
+    mix test
 
-
-
-
-
-
-
-
-
-
-
-
-
+Run "mix help" for more commands.
