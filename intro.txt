@@ -162,3 +162,5 @@ You can use "mix" to compile it, test it, and more:
     mix test
 
 Run "mix help" for more commands.
+
+⚠️ Para los ejercicios, trabajarás principalmente en el archivo: lib/exercises1.ex

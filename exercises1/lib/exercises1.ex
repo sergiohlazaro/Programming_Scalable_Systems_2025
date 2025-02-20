@@ -1,18 +1,7 @@
-defmodule Exercises1 do
-  @moduledoc """
-  Documentation for `Exercises1`.
-  """
+defmodule Sheet1 do
+  def match_123([1, 2, 3 | tail]), do: tail
 
-  @doc """
-  Hello world.
+  def match_string("Hello " <> name), do: name
 
-  ## Examples
-
-      iex> Exercises1.hello()
-      :world
-
-  """
-  def hello do
-    :world
-  end
+  def match_1234([1, 2, 3] ++ tail), do: tail
 end
