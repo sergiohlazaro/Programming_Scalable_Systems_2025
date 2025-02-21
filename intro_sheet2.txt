@@ -1,3 +1,13 @@
+- Apunte:
+    * Limpia la compilación anterior
+
+        $mix clean
+        $ mix compile
+
+    * Ejecutar nuevamente los test
+
+        $mix test
+
 📂 Creación del Proyecto con mix:
 
     $mix new sheet2
@@ -33,3 +43,35 @@ test/sheet2_test.exs  # Aquí pondremos los tests proporcionados
 
     $mix test
 
+📂 Implementar los ejercicios:
+
+- Ejercicio 1: len/1 - Longitud de una lista
+
+    defmodule Sheet2 do
+        def len([]), do: 0
+        def len([_ | tail]), do: 1 + len(tail)
+    end
+
+- Ejercicio 2: app/2 - Concatenar listas
+
+    defmodule Sheet2 do
+        def app([], list2), do: list2
+        def app([head | tail], list2), do: [head | app(tail, list2)]
+    end
+
+- Ejercicio 3: fib/1 - Fibonacci
+
+    defmodule Sheet2 do
+        def fib(1), do: 1
+        def fib(2), do: 1
+        def fib(n), do: fib(n - 1) + fib(n - 2)
+    end
+
+- Ejercicio 4: gcd/2 - Máximo común divisor (Algoritmo de Euclides)
+
+    defmodule Sheet2 do
+        def gcd(n, 0), do: n
+        def gcd(n, m), do: gcd(m, rem(n, m))
+    end
+
+- El resto de ejercicios están resueltos en el código.
