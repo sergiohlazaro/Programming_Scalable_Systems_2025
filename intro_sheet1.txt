@@ -318,3 +318,4 @@ Ejercicio 6: Pattern Matching
 
 - Si la variable ya tiene un valor asignado, debe coincidir con el patrón.
 
+⚠️ Hasta este punto tenemos la introducción con la resolución de la primera hoja de ejercicios. Los próximos ejercicios se subirán en el futuro.
