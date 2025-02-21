@@ -1,0 +1,35 @@
+📂 Creación del Proyecto con mix:
+
+    $mix new sheet2
+    $cd sheet2
+
+📂 Trabajaremos en:
+
+lib/sheet2.ex   # Aquí implementaremos las funciones
+test/sheet2_test.exs  # Aquí pondremos los tests proporcionados
+
+- Abre lib/sheet2.ex y define el módulo Sheet2:
+
+    defmodule Sheet2 do
+        # Aquí van las funciones de los ejercicios
+    end
+
+📂 Agregar los Tests:
+
+- Crea el archivo test/sheet2_test.exs y copia el contenido del test que proporcionan.
+
+- Para asegurarnos de que ExUnit esté configurado correctamente, añade ExUnit.start() al inicio del archivo:
+
+    ExUnit.start()
+    defmodule Sheet2Test do
+        use ExUnit.Case
+
+        # Aquí van los tests
+    end
+
+- Copia el test proporcionado dentro de Sheet2Test.
+
+- Para ejecutar los tests en cualquier momento, usa:
+
+    $mix test
+
