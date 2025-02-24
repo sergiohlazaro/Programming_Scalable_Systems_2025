@@ -28,7 +28,7 @@ test/sheet2_test.exs  # Aquí pondremos los tests proporcionados
 
 - Crea el archivo test/sheet2_test.exs y copia el contenido del test que proporcionan.
 
-- Para asegurarnos de que ExUnit esté configurado correctamente, añade ExUnit.start() al inicio del archivo:
+- Para asegurarnos de que ExUnit esté configurado correctamente, añade ExUnit.start() al inicio del archivo (no es necesario si no da problemas):
 
     ExUnit.start()
     defmodule Sheet2Test do
