@@ -2,7 +2,7 @@
     * Limpia la compilación anterior
 
         $mix clean
-        $ mix compile
+        $mix compile
 
     * Ejecutar nuevamente los test
 
