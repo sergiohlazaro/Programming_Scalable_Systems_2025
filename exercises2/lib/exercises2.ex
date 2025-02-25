@@ -64,44 +64,8 @@ defmodule Sheet2 do
   def permuts([x]), do: [[x]]
   def permuts(list), do: for x <- list, rest <- permuts(List.delete(list, x)), do: [x | rest]
 
-  # Ejercicio 11: Operaciones con vectores
-  def vadd([], []), do: []
-  def vadd([h1 | t1], [h2 | t2]), do: [h1 + h2 | vadd(t1, t2)]
-
-  def scale([], _), do: []
-  def scale([h | t], s), do: [h * s | scale(t, s)]
-
-  def dotprod([], []), do: 0
-  def dotprod([h1 | t1], [h2 | t2]), do: h1 * h2 + dotprod(t1, t2)
-
-  # Ejercicio 16: Criba de Eratóstenes (Números primos hasta n)
-  def primes_upto(n) when n < 2, do: []
-  def primes_upto(n) do
-    2..n
-    |> Enum.filter(&is_prime/1)
-  end
-
-  defp is_prime(2), do: true
-  defp is_prime(n) when n > 2 do
-    max_divisor = max(2, :math.sqrt(n) |> floor())  # Evita rangos inválidos
-    Enum.all?(2..max_divisor, fn x -> rem(n, x) != 0 end)
-  end
-
-  # Ejercicio 17: Factorización en números primos
-  def factorize(n), do: factorize(n, 2, [])
-
-  defp factorize(1, _, factors), do: factors
-  defp factorize(n, d, factors) when rem(n, d) == 0, do: factorize(div(n, d), d, [d | factors])
-  defp factorize(n, d, factors), do: factorize(n, d + 1, factors)
-
-  # Ejercicio 18: Árboles binarios de búsqueda - Inserción
-  def tree_insert(:tip, value), do: {:node, :tip, value, :tip}
-  def tree_insert({:node, left, v, right}, value) when value < v, do: {:node, tree_insert(left, value), v, right}
-  def tree_insert({:node, left, v, right}, value), do: {:node, left, v, tree_insert(right, value)}
-
-  # Ejercicio 19: Ordenación de árbol binario (inorder)
-  def inorder(:tip), do: []
-  def inorder({:node, left, v, right}), do: inorder(left) ++ [v] ++ inorder(right)
+  ##########################################################################################################
+  ##########################################################################################################
 
   # Funciones adicionales debido a los errores surgidos en Deliverit.
   # all/2
