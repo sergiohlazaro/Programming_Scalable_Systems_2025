@@ -67,6 +67,32 @@ defmodule Sheet2 do
   ##########################################################################################################
   ##########################################################################################################
 
+  # Ejercicio 11: Operaciones con vectores
+  def vadd([], []), do: []
+  def vadd([h1 | t1], [h2 | t2]), do: [h1 + h2 | vadd(t1, t2)]
+
+  def scale([], _), do: []
+  def scale([h | t], s), do: [h * s | scale(t, s)]
+
+  def dotprod([], []), do: 0
+  def dotprod([h1 | t1], [h2 | t2]), do: h1 * h2 + dotprod(t1, t2)
+
+  # Ejercicio 16: Criba de Eratóstenes (Números primos hasta n)
+  def primes_upto(n) when n < 2, do: []
+  def primes_upto(n) do
+    2..n
+    |> Enum.filter(&is_prime/1)
+  end
+
+  defp is_prime(2), do: true
+  defp is_prime(n) when n > 2 do
+    max_divisor = max(2, :math.sqrt(n) |> floor())  # Evita rangos inválidos
+    Enum.all?(2..max_divisor, fn x -> rem(n, x) != 0 end)
+  end
+
+  ##############################################################################
+  ##############################################################################
+
   # Funciones adicionales debido a los errores surgidos en Deliverit.
   # all/2
   def all([], _func), do: true
