@@ -102,4 +102,49 @@ defmodule Sheet2 do
   # Ejercicio 19: Ordenación de árbol binario (inorder)
   def inorder(:tip), do: []
   def inorder({:node, left, v, right}), do: inorder(left) ++ [v] ++ inorder(right)
+
+  # Funciones adicionales debido a los errores surgidos en Deliverit.
+  # all/2
+  def all([], _func), do: true
+  def all([head | tail], func), do: func.(head) && all(tail, func)
+
+  # filter_tree/2
+  def filter_tree(:tip, _), do: :tip
+  def filter_tree({:node, left, v, right}, func) do
+    filtered_left = filter_tree(left, func)
+    filtered_right = filter_tree(right, func)
+
+    if func.(v) do
+      {:node, filtered_left, v, filtered_right}
+    else
+      merge(filtered_left, filtered_right)
+    end
+  end
+
+  defp merge(:tip, right), do: right
+  defp merge(left, :tip), do: left
+  defp merge(left, {:node, l, v, r}), do: {:node, merge(left, l), v, r}
+
+  # map_tree/2
+  def map_tree(:tip, _func), do: :tip
+  def map_tree({:node, left, v, right}, func) do
+    {:node, map_tree(left, func), func.(v), map_tree(right, func)}
+  end
+
+  # reverse_fold/1
+  def reverse_fold(list), do: List.foldr(list, [], fn x, acc -> acc ++ [x] end)
+
+  # revonto/2
+  def revonto_fold(xs, ys), do: List.foldr(xs, ys, fn x, acc -> acc ++ [x] end)
+
+  # treesort/1
+  def treesort(list) do
+    list
+    |> Enum.reduce(:tip, &tree_insert/2)
+    |> inorder()
+  end
+
+  # zip_with/3
+  def zip_with(_, [], []), do: []
+  def zip_with(func, [h1 | t1], [h2 | t2]), do: [func.(h1, h2) | zip_with(func, t1, t2)]
 end
