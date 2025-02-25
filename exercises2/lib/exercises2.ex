@@ -93,6 +93,22 @@ defmodule Sheet2 do
   ##############################################################################
   ##############################################################################
 
+    # Ejercicio 17: Factorización en números primos
+  def factorize(n), do: factorize(n, 2, [])
+
+  defp factorize(1, _, factors), do: factors
+  defp factorize(n, d, factors) when rem(n, d) == 0, do: factorize(div(n, d), d, [d | factors])
+  defp factorize(n, d, factors), do: factorize(n, d + 1, factors)
+
+  # Ejercicio 18: Árboles binarios de búsqueda - Inserción
+  def tree_insert(:tip, value), do: {:node, :tip, value, :tip}
+  def tree_insert({:node, left, v, right}, value) when value < v, do: {:node, tree_insert(left, value), v, right}
+  def tree_insert({:node, left, v, right}, value), do: {:node, left, v, tree_insert(right, value)}
+
+  # Ejercicio 19: Ordenación de árbol binario (inorder)
+  def inorder(:tip), do: []
+  def inorder({:node, left, v, right}), do: inorder(left) ++ [v] ++ inorder(right)
+
   # Funciones adicionales debido a los errores surgidos en Deliverit.
   # all/2
   def all([], _func), do: true
