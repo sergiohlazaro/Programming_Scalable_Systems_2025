@@ -252,6 +252,55 @@ defmodule Sheet2 do
     end)
   end
 
-  # Ejercicio 23: 
+  # Ejercicio 23: implementacion de reverse_fold/1 usando List.foldr/2
+  def reverse_fold(list) do
+    List.foldr(list, [], fn x, acc -> acc ++ [x] end)
+  end
+
+  # Ejercicio 24: implementacion de revonto_fold/2 usando List.foldr/3
+  def revonto_fold(xs, ys) do
+    List.foldr(xs, ys, fn x, acc -> [x | acc] end)
+  end
+
+  # Ejercicio 25: implementacion de zip_with/3 usando Enum.map/2 y Enum.zip/2
+  # def zip_with(func, list1, list2) do
+  #  list1
+  #  |> Enum.zip(list2)
+  #  |> Enum.map(fn {x, y} -> func.(x, y) end)
+  # end
+
+  # Ejercicio 26: implementacion de pascal_zip/1 usando zip_with/3
+  def pascal_zip(0), do: [1]
+  def pascal_zip(n) do
+    prev = pascal_zip(n - 1)
+    [1 | zip_with(&+/2, prev, tl(prev))] ++ [1]
+  end
+
+  def zip_with(func, list1, list2) do
+    list1
+    |> Enum.zip(list2)
+    |> Enum.map(fn {x, y} -> func.(x, y) end)
+  end
+
+  # Ejercicio 27: implementacion de operaciones con vectores usando funciones de orden superior
+  # Suma de vectores usando Enum.zip y Enum.map
+  def vadd_ho(v1, v2) do
+    Enum.map(Enum.zip(v1, v2), fn {x, y} -> x + y end)
+  end
+
+  # Multiplicación por escalar usando Enum.map
+  def scale_ho(scalar, vector) do
+    Enum.map(vector, &(&1 * scalar))
+  end
+
+  # Producto escalar usando Enum.zip y Enum.reduce
+  def dotprod_ho(v1, v2) do
+    v1
+    |> Enum.zip(v2)
+    |> Enum.map(fn {x, y} -> x * y end)
+    |> Enum.reduce(0, &+/2)
+  end
+
+  # Ejercicio 28: 
 
 end
