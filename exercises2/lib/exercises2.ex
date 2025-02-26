@@ -65,7 +65,10 @@ defmodule Sheet2 do
   end
 
   # Ejercicio 10: generacion de permutaciones 
-  def permuts([]), do: []  # Cambio aquí: antes devolvía [[]]
+  def permuts([]), do: []  # Si se llama directamente, devolver []
+
+  def permuts(list) when length(list) == 1, do: [list]  # Caso base cuando hay un solo elemento
+
   def permuts(list) do
     for elem <- list, rest <- permuts(List.delete(list, elem)), do: [elem | rest]
   end
@@ -76,22 +79,22 @@ defmodule Sheet2 do
   def vadd([a | at], [b | bt]), do: [a + b | vadd(at, bt)]
 
   # Multiplicación por escalar
-  def scale(_, []), do: []
-  def scale(scalar, [h | t]), do: [scalar * h | scale(scalar, t)]
+  def scale([], _scalar), do: []
+  def scale([h | t], scalar), do: [h * scalar | scale(t, scalar)]
 
   # Producto escalar
   def dotprod([], []), do: 0
   def dotprod([a | at], [b | bt]), do: a * b + dotprod(at, bt)
 
   # Ejercicio 12: dimensiones de una matriz 
-  def dim([]), do: {0, 0} # Matriz vacía
-  def dim(matrix), do: {length(matrix), length(hd(matrix))}
+  # def dim([]), do: {0, 0} # Matriz vacía
+  # def dim(matrix), do: {length(matrix), length(hd(matrix))}
 
   # Ejercicio 13: suma de matrices 
-  def matrixsum([], []), do: []
-  def matrixsum([row_a | rest_a], [row_b | rest_b]) do
-    [vadd(row_a, row_b) | matrixsum(rest_a, rest_b)]
-  end
+  # def matrixsum([], []), do: []
+  # def matrixsum([row_a | rest_a], [row_b | rest_b]) do
+  #  [vadd(row_a, row_b) | matrixsum(rest_a, rest_b)]
+  # end
 
   # defp vadd([], []), do: []
   # defp vadd([a | at], [b | bt]), do: [a + b | vadd(at, bt)]
@@ -203,10 +206,10 @@ defmodule Sheet2 do
   # Ejercicio 21: practicas con Etudes en Elixir
   
   ## 21.4: invirtiendo una lista
-  def reverse(list), do: reverse_helper(list, [])
+  # def reverse(list), do: reverse_helper(list, [])
 
-  defp reverse_helper([], acc), do: acc
-  defp reverse_helper([head | tail], acc), do: reverse_helper(tail, [head | acc])
+  # defp reverse_helper([], acc), do: acc
+  # defp reverse_helper([head | tail], acc), do: reverse_helper(tail, [head | acc])
 
   ## 21.5: contando elementos en una lista
   def count(list), do: count_helper(list, 0)
@@ -246,7 +249,7 @@ defmodule Sheet2 do
   end
 
   # Ejercicio 22: implementacion de all/2
-  def all?(list, func) do
+  def all(list, func) do
     Enum.reduce_while(list, true, fn x, _acc ->
       if func.(x), do: {:cont, true}, else: {:halt, false}
     end)
@@ -259,7 +262,7 @@ defmodule Sheet2 do
 
   # Ejercicio 24: implementacion de revonto_fold/2 usando List.foldr/3
   def revonto_fold(xs, ys) do
-    List.foldr(xs, ys, fn x, acc -> [x | acc] end)
+    List.foldr(xs, ys, fn x, acc -> acc ++ [x] end)
   end
 
   # Ejercicio 25: implementacion de zip_with/3 usando Enum.map/2 y Enum.zip/2
@@ -276,11 +279,11 @@ defmodule Sheet2 do
     [1 | zip_with(&+/2, prev, tl(prev))] ++ [1]
   end
 
-  def zip_with(func, list1, list2) do
-    list1
-    |> Enum.zip(list2)
-    |> Enum.map(fn {x, y} -> func.(x, y) end)
-  end
+  # def zip_with(func, list1, list2) do
+  #  list1
+  #  |> Enum.zip(list2)
+  #  |> Enum.map(fn {x, y} -> func.(x, y) end)
+  # end
 
   # Ejercicio 27: implementacion de operaciones con vectores usando funciones de orden superior
   # Suma de vectores usando Enum.zip y Enum.map
@@ -294,13 +297,91 @@ defmodule Sheet2 do
   end
 
   # Producto escalar usando Enum.zip y Enum.reduce
-  def dotprod_ho(v1, v2) do
+  # def dotprod_ho(v1, v2) do
+  #  v1
+  #  |> Enum.zip(v2)
+  #  |> Enum.map(fn {x, y} -> x * y end)
+  #  |> Enum.reduce(0, &+/2)
+  # end
+
+  # Ejercicio 28: implementacion de matrixsum_ho/2 usando funciones de orden superior
+  def matrixsum_ho(m1, m2) do
+    Enum.zip(m1, m2)
+    |> Enum.map(fn {row1, row2} -> zip_with(&+/2, row1, row2) end)
+  end
+
+  def zip_with(func, list1, list2) do
+    Enum.zip(list1, list2)
+    |> Enum.map(fn {x, y} -> func.(x, y) end)
+  end
+
+  # Ejercicio 29: implementacion de transpose_ho/1 usando funciones de orden superior
+  # def transpose_ho([]), do: []
+  # def transpose_ho([[] | _]), do: []
+
+  # def transpose_ho(matrix) do
+  #  [Enum.map(matrix, &hd/1) | transpose_ho(Enum.map(matrix, &tl/1))]
+  # end
+
+  # Ejercicio 30: implementacion de matrixprod_ho/2 usando funciones de orden superior
+  def matrixprod_ho(m1, m2) do
+    m2_t = transpose_ho(m2)  # Transponer B para acceder a columnas
+    Enum.map(m1, fn row -> 
+      Enum.map(m2_t, fn col -> dotprod_ho(row, col) end)
+    end)
+  end
+
+  defp transpose_ho([]), do: []
+  defp transpose_ho([[] | _]), do: []
+  defp transpose_ho(matrix) do
+    [Enum.map(matrix, &hd/1) | transpose_ho(Enum.map(matrix, &tl/1))]
+  end
+
+  defp dotprod_ho(v1, v2) do
     v1
     |> Enum.zip(v2)
     |> Enum.map(fn {x, y} -> x * y end)
     |> Enum.reduce(0, &+/2)
   end
 
-  # Ejercicio 28: 
+  # Ejercicio 31: uso del operador & para funciones anonimas
+
+  # Ejercicio 32: uso de stream para evaluacion diferida
+
+  # Ejercicio 33: 
+
+  # Funciones adicionales debido al test de deliverit
+  ## map_tree/2
+  def map_tree(:tip, _func), do: :tip
+  def map_tree({:node, left, value, right}, func) do
+    {:node, map_tree(left, func), func.(value), map_tree(right, func)}
+  end
+
+  ## filter_tree/2
+  def filter_tree(:tip, _func), do: :tip
+  def filter_tree({:node, left, value, right}, func) do
+    new_left = filter_tree(left, func)
+    new_right = filter_tree(right, func)
+
+    if func.(value) do
+      {:node, new_left, value, new_right}
+    else
+      merge_trees(new_left, new_right)
+    end
+  end
+
+  defp merge_trees(:tip, right), do: right
+  defp merge_trees(left, :tip), do: left
+  defp merge_trees(left, right) do
+    {min_value, new_right} = extract_min(right)
+    {:node, left, min_value, new_right}
+  end
+
+  defp extract_min({:node, :tip, value, right}), do: {value, right}
+  defp extract_min({:node, left, value, right}) do
+    {min, new_left} = extract_min(left)
+    {min, {:node, new_left, value, right}}
+  end
+
 
 end
