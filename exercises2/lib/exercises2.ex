@@ -76,7 +76,7 @@ defmodule Sheet2 do
   def permuts(list) do
     for elem <- list, rest <- permuts(List.delete(list, elem)), do: [elem | rest]
   end
-  
+
   # Ejercicio 11: operaciones con vectores
   # Suma de vectores
   def vadd([], []), do: []
@@ -388,5 +388,4 @@ defmodule Sheet2 do
     {min, new_left} = extract_min(left)
     {min, {:node, new_left, value, right}}
   end
-
 end
