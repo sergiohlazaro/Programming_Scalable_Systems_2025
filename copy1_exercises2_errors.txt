@@ -24,7 +24,7 @@ defmodule Sheet2 do
 
   def fib_optimized(n), do: List.last(fibs(n))
 
-  # Ejercicio 6: inversion de una lista (sustituido por el 7)
+  # Ejercicio 6: inversion de una lista
   # def reverse([]), do: []
   # def reverse([head | tail]), do: reverse(tail) ++ [head]
 
@@ -32,7 +32,7 @@ defmodule Sheet2 do
   def revonto([], ys), do: ys
   def revonto([head | tail], ys), do: revonto(tail, [head | ys])
 
-  # def reverse(xs), do: revonto(xs, [])
+  def reverse(xs), do: revonto(xs, [])
 
   # Ejercicio 8: numeros combinatorios y triangulo de Pascal
   def pascal(0), do: [1]
@@ -65,10 +65,6 @@ defmodule Sheet2 do
   end
 
   # Ejercicio 10: generacion de permutaciones 
-  # def permuts([]), do: []
-  # def permuts(list) do
-  #  for elem <- list, rest <- permuts(List.delete(list, elem)), do: [elem | rest]
-  # end
   def permuts([]), do: []  # Si se llama directamente, devolver []
 
   def permuts(list) when length(list) == 1, do: [list]  # Caso base cuando hay un solo elemento
@@ -76,7 +72,7 @@ defmodule Sheet2 do
   def permuts(list) do
     for elem <- list, rest <- permuts(List.delete(list, elem)), do: [elem | rest]
   end
-  
+
   # Ejercicio 11: operaciones con vectores
   # Suma de vectores
   def vadd([], []), do: []
@@ -95,26 +91,33 @@ defmodule Sheet2 do
   # def dim(matrix), do: {length(matrix), length(hd(matrix))}
 
   # Ejercicio 13: suma de matrices 
-  def matrixsum([], []), do: []
-  def matrixsum([row_a | rest_a], [row_b | rest_b]) do
-    [vadd(row_a, row_b) | matrixsum(rest_a, rest_b)]
-  end
+  # def matrixsum([], []), do: []
+  # def matrixsum([row_a | rest_a], [row_b | rest_b]) do
+  #  [vadd(row_a, row_b) | matrixsum(rest_a, rest_b)]
+  # end
 
   # defp vadd([], []), do: []
   # defp vadd([a | at], [b | bt]), do: [a + b | vadd(at, bt)]
 
   # Ejercicio 14: transposicion de una matriz 
-  def transpose([]), do: []
-  def transpose([[] | _]), do: [] # Si todas las filas están vacías
-
   def transpose(matrix) do
-    [Enum.map(matrix, &hd/1) | transpose(Enum.map(matrix, &tl/1))]
+    if Enum.uniq(Enum.map(matrix, &length/1)) |> length() == 1 do
+      do_transpose(matrix)
+    else
+      {:error, "Las filas tienen diferente número de columnas"}
+    end
+  end
+
+  defp do_transpose([]), do: []
+  defp do_transpose([[] | _]), do: []
+  defp do_transpose(matrix) do
+    [Enum.map(matrix, &hd/1) | do_transpose(Enum.map(matrix, &tl/1))]
   end
 
   # Ejercicio 15: producto de matrices 
   def matrixprod(a, b) do
     if valid_matrices?(a, b) do
-      b_t = transpose(b)
+      b_t = transpose(b)  # Aquí usamos la versión pública de transpose/1
       for row <- a do
         for col <- b_t do
           dotprod(row, col)
@@ -124,10 +127,6 @@ defmodule Sheet2 do
       {:error, "Dimensiones incompatibles para multiplicación"}
     end
   end
-
-  # defp transpose([]), do: []
-  # defp transpose([[] | _]), do: []
-  # defp transpose(matrix), do: [Enum.map(matrix, &hd/1) | transpose(Enum.map(matrix, &tl/1))]
 
   # defp dotprod([], []), do: 0
   # defp dotprod([a | at], [b | bt]), do: a * b + dotprod(at, bt)
@@ -158,7 +157,7 @@ defmodule Sheet2 do
   def factorize(n) when n < 2, do: []
 
   def factorize(n) do
-    primes = primes_upto(n)
+    primes = primes_upto(n)  # Usamos la función pública de Ejercicio 16
     do_factorize(n, primes)
   end
 
@@ -168,26 +167,14 @@ defmodule Sheet2 do
   end
   defp do_factorize(n, [_ | rest]), do: do_factorize(n, rest)
 
-  # defp primes_upto(n) when n < 2, do: []
-  # defp primes_upto(n) do
-  #  2..n |> Enum.to_list() |> sieve()
-  # end
-
-  # defp sieve([]), do: []
-  # defp sieve([prime | rest]) do
-  #  [prime | sieve(Enum.filter(rest, fn x -> rem(x, prime) != 0 end))]
-  # end
- 
   # Ejercicio 18: inserccion de arboles binarios de busqueda
-  # def tree_insert(:tip, value), do: {:node, :tip, value, :tip}
-
-  # def tree_insert({:node, left, val, right}, value) when value < val do
-  #  {:node, tree_insert(left, value), val, right}
-  # end
-
-  # def tree_insert({:node, left, val, right}, value) do
-  #  {:node, left, val, tree_insert(right, value)}
-  # end
+  def tree_insert(:tip, value), do: {:node, :tip, value, :tip}
+  def tree_insert({:node, left, val, right}, value) when value < val do
+    {:node, tree_insert(left, value), val, right}
+  end
+  def tree_insert({:node, left, val, right}, value) do
+    {:node, left, val, tree_insert(right, value)}
+  end
 
   # Ejercicio 19: recorrido en oden de un arbol binario (Tree Sort)
   # Recorrido en orden del árbol
@@ -203,22 +190,24 @@ defmodule Sheet2 do
     |> inorder()
   end
 
-  # Inserción en el Arbol Binario de Busqueda
-  def tree_insert(:tip, value), do: {:node, :tip, value, :tip}
-  def tree_insert({:node, left, val, right}, value) when value < val do
-    {:node, tree_insert(left, value), val, right}
-  end
-  def tree_insert({:node, left, val, right}, value) do
-    {:node, left, val, tree_insert(right, value)}
-  end
+  # Inserción en el Árbol Binario de Búsqueda
+  # def tree_insert(:tip, value), do: {:node, :tip, value, :tip}
+  # def tree_insert({:node, left, val, right}, value) when value < val do
+  #  {:node, tree_insert(left, value), val, right}
+  # end
+  # def tree_insert({:node, left, val, right}, value) do
+  #  {:node, left, val, tree_insert(right, value)}
+  # end
 
-  # Ejercicio 20: revision de lecturas 
+  # Ejercicio 20: revision de las lecturas
+
   # Ejercicio 21: practicas con Etudes en Elixir
-  ## 21.4: invirtiendo una lista (utilizamos este reverse)
-  def reverse(list), do: reverse_helper(list, [])
+  
+  ## 21.4: invirtiendo una lista
+  # def reverse(list), do: reverse_helper(list, [])
 
-  defp reverse_helper([], acc), do: acc
-  defp reverse_helper([head | tail], acc), do: reverse_helper(tail, [head | acc])
+  # defp reverse_helper([], acc), do: acc
+  # defp reverse_helper([head | tail], acc), do: reverse_helper(tail, [head | acc])
 
   ## 21.5: contando elementos en una lista
   def count(list), do: count_helper(list, 0)
@@ -258,9 +247,10 @@ defmodule Sheet2 do
   end
 
   # Ejercicio 22: implementacion de all/2
-  def all?([], _func), do: true
-  def all?([head | tail], func) do
-    if func.(head), do: all?(tail, func), else: false
+  def all(list, func) do
+    Enum.reduce_while(list, true, fn x, _acc ->
+      if func.(x), do: {:cont, true}, else: {:halt, false}
+    end)
   end
 
   # Ejercicio 23: implementacion de reverse_fold/1 usando List.foldr/2
@@ -295,14 +285,14 @@ defmodule Sheet2 do
 
   # Ejercicio 27: implementacion de operaciones con vectores usando funciones de orden superior
   # Suma de vectores usando Enum.zip y Enum.map
-  # def vadd_ho(v1, v2) do
-  #  Enum.map(Enum.zip(v1, v2), fn {x, y} -> x + y end)
-  # end
+  def vadd_ho(v1, v2) do
+    Enum.map(Enum.zip(v1, v2), fn {x, y} -> x + y end)
+  end
 
   # Multiplicación por escalar usando Enum.map
-  # def scale_ho(scalar, vector) do
-  #  Enum.map(vector, &(&1 * scalar))
-  # end
+  def scale_ho(scalar, vector) do
+    Enum.map(vector, &(&1 * scalar))
+  end
 
   # Producto escalar usando Enum.zip y Enum.reduce
   # def dotprod_ho(v1, v2) do
@@ -319,9 +309,12 @@ defmodule Sheet2 do
   end
 
   def zip_with(func, list1, list2) do
-    list1
-    |> Enum.zip(list2)
-    |> Enum.map(fn {x, y} -> func.(x, y) end)
+    Enum.zip(list1, list2)
+    |> Enum.map(fn 
+        {x, y} when is_number(x) and is_number(y) -> func.(x, y)
+        _ -> nil  # Ignorar valores no numéricos
+      end)
+    |> Enum.reject(&is_nil/1)  # Eliminar valores `nil`
   end
 
   # Ejercicio 29: implementacion de transpose_ho/1 usando funciones de orden superior
@@ -355,7 +348,7 @@ defmodule Sheet2 do
 
   # Ejercicio 31: uso del operador & para funciones anonimas
 
-   # Ejercicio 32:
+  # Ejercicio 32:
   # map_tree/2
   def map_tree(:tip, _func), do: :tip
   def map_tree({:node, left, value, right}, func) do
@@ -388,5 +381,4 @@ defmodule Sheet2 do
     {min, new_left} = extract_min(left)
     {min, {:node, new_left, value, right}}
   end
-
 end
