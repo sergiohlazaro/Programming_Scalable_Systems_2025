@@ -205,11 +205,13 @@ defmodule Sheet2 do
 
   # Inserción en el Arbol Binario de Busqueda
   def tree_insert(:tip, value), do: {:node, :tip, value, :tip}
+
   def tree_insert({:node, left, val, right}, value) when value < val do
     {:node, tree_insert(left, value), val, right}
   end
+
   def tree_insert({:node, left, val, right}, value) do
-    {:node, left, val, tree_insert(right, value)}
+    {:node, left, val, tree_insert(right, value)}  # Duplicados van a la derecha
   end
 
   # Ejercicio 20: revision de lecturas 
@@ -325,11 +327,13 @@ defmodule Sheet2 do
   # end
   
   #Solucion para zip_with para recibir listas de diferentes tamaños o vacias
-  def zip_with(_func, [], []), do: []
-  def zip_with(func, list1, list2) do
-    Enum.zip(list1, list2)
-    |> Enum.map(fn {x, y} -> func.(x, y) end)
+  def zip_with([], [], _func), do: []  # Manejo de listas vacías
+
+  def zip_with([h1 | t1], [h2 | t2], func) do
+    [func.(h1, h2) | zip_with(t1, t2, func)]
   end
+
+  def zip_with(_, _, _), do: []  # Si las listas no tienen la misma longitud, retorna []
 
   # Ejercicio 29: implementacion de transpose_ho/1 usando funciones de orden superior
   # def transpose_ho([]), do: []
@@ -372,22 +376,23 @@ defmodule Sheet2 do
   # Ejercicio 33: 
   # filter_tree/2
   def filter_tree(:tip, _func), do: :tip
+
   def filter_tree({:node, left, value, right}, func) do
     new_left = filter_tree(left, func)
     new_right = filter_tree(right, func)
 
     if func.(value) do
-      {:node, new_left, value, new_right}  # Mantener nodo si cumple condición
+      {:node, new_left, value, new_right}
     else
-      merge_trees(new_left, new_right)  # Eliminar nodo si no cumple condición
+      case {new_left, new_right} do
+        {:tip, :tip} -> :tip
+        {:tip, _} -> new_right
+        {_, :tip} -> new_left
+        {_, _} ->
+          {min_value, new_right_fixed} = extract_min(new_right)
+          {:node, new_left, min_value, new_right_fixed}
+      end
     end
-  end
-
-  defp merge_trees(:tip, right), do: right
-  defp merge_trees(left, :tip), do: left
-  defp merge_trees(left, right) do
-    {min_value, new_right} = extract_min(right)
-    {:node, left, min_value, new_right}
   end
 
   defp extract_min({:node, :tip, value, right}), do: {value, right}
@@ -395,4 +400,12 @@ defmodule Sheet2 do
     {min, new_left} = extract_min(left)
     {min, {:node, new_left, value, right}}
   end
+
+  # Fusión correcta de dos árboles después de eliminar un nodo
+  # defp merge_trees(:tip, right), do: right
+  # defp merge_trees(left, :tip), do: left
+  # defp merge_trees(left, right) do
+  #  {min_value, new_right} = extract_min(right)  # Extraer mínimo del subárbol derecho
+  #  {:node, left, min_value, new_right}
+  # end
 end
