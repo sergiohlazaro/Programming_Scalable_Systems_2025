@@ -258,9 +258,9 @@ defmodule Sheet2 do
   end
 
   # Ejercicio 22: implementacion de all/2
-  def all?([], _func), do: true
-  def all?([head | tail], func) do
-    if func.(head), do: all?(tail, func), else: false
+  def all([], _func), do: true
+  def all([head | tail], func) do
+    if func.(head), do: all(tail, func), else: false
   end
 
   # Ejercicio 23: implementacion de reverse_fold/1 usando List.foldr/2
