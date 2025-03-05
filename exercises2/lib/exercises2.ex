@@ -199,7 +199,7 @@ defmodule Sheet2 do
   # Ordenar una lista usando Tree Sort
   def treesort(list) do
     list
-    |> Enum.reduce(:tip, &tree_insert/2)
+    |> Enum.reduce(:tip, fn elem, tree -> tree_insert(tree, elem) end)
     |> inorder()
   end
 
@@ -269,9 +269,8 @@ defmodule Sheet2 do
   end
 
   # Ejercicio 24: implementacion de revonto_fold/2 usando List.foldr/3
-  # Solucion problemas en revonto_fold
   def revonto_fold(xs, ys) do
-    List.foldr(xs, ys, fn x, acc -> [x | acc] end)
+    List.foldl(xs, ys, fn x, acc -> [x | acc] end)
   end
 
   # Ejercicio 25: implementacion de zip_with/3 usando Enum.map/2 y Enum.zip/2
@@ -327,10 +326,7 @@ defmodule Sheet2 do
   
   #Solucion para zip_with para recibir listas de diferentes tamaños o vacias
   def zip_with(_func, [], []), do: []
-  def zip_with(_func, [], _), do: {:error, "Listas de diferente longitud"}
-  def zip_with(_func, _, []), do: {:error, "Listas de diferente longitud"}
-
-  def zip_with(func, list1, list2) when length(list1) == length(list2) do
+  def zip_with(func, list1, list2) do
     Enum.zip(list1, list2)
     |> Enum.map(fn {x, y} -> func.(x, y) end)
   end
@@ -381,13 +377,12 @@ defmodule Sheet2 do
     new_right = filter_tree(right, func)
 
     if func.(value) do
-      {:node, new_left, value, new_right}
+      {:node, new_left, value, new_right}  # Mantener nodo si cumple condición
     else
-      merge_trees(new_left, new_right)
+      merge_trees(new_left, new_right)  # Eliminar nodo si no cumple condición
     end
   end
 
-  # Solucion asegura que si el nodo eliminado tiene solo un hijo, lo reestructura correctamente
   defp merge_trees(:tip, right), do: right
   defp merge_trees(left, :tip), do: left
   defp merge_trees(left, right) do
