@@ -391,9 +391,9 @@ defmodule Sheet2 do
     new_right = filter_tree(right, func)
 
     if func.(value) do
-      {:node, new_left, value, new_right}  # Mantener nodo si pasa el filtro
+      {:node, new_left, value, new_right}  # Mantener nodo si cumple condición
     else
-      merge_trees(new_left, new_right)  # Eliminar nodo si no pasa el filtro
+      merge_trees(new_left, new_right)  # Eliminar nodo si no cumple condición
     end
   end
 
