@@ -269,8 +269,9 @@ defmodule Sheet2 do
   end
 
   # Ejercicio 24: implementacion de revonto_fold/2 usando List.foldr/3
+  # Solucion problemas en revonto_fold
   def revonto_fold(xs, ys) do
-    List.foldr(xs, ys, fn x, acc -> [x | acc] end)
+    List.foldr(xs, ys, fn x, acc -> acc ++ [x] end)
   end
 
   # Ejercicio 25: implementacion de zip_with/3 usando Enum.map/2 y Enum.zip/2
