@@ -382,23 +382,26 @@ defmodule Sheet2 do
     new_right = filter_tree(right, func)
 
     if func.(value) do
-      {:node, new_left, value, new_right}
+      {:node, new_left, value, new_right}  # Mantener el nodo si cumple la condición
     else
-      case {new_left, new_right} do
-        {:tip, :tip} -> :tip
-        {:tip, _} -> new_right
-        {_, :tip} -> new_left
-        {_, _} ->
-          {min_value, new_right_fixed} = extract_min(new_right)
-          {:node, new_left, min_value, new_right_fixed}
+      # Si el nodo no cumple la condición, eliminarlo correctamente
+      cond do
+        new_left == :tip and new_right == :tip -> :tip  # Si no tiene hijos, eliminarlo
+        new_left == :tip -> new_right  # Si solo tiene hijo derecho, devolverlo
+        new_right == :tip -> new_left  # Si solo tiene hijo izquierdo, devolverlo
+        true ->
+          # Si tiene ambos hijos, encontrar el mínimo del subárbol derecho y reemplazar el nodo actual
+          {min_value, updated_right} = extract_min(new_right)
+          {:node, new_left, min_value, updated_right}
       end
     end
   end
 
+  # Encuentra y elimina el nodo mínimo en el subárbol derecho
   defp extract_min({:node, :tip, value, right}), do: {value, right}
   defp extract_min({:node, left, value, right}) do
-    {min, new_left} = extract_min(left)
-    {min, {:node, new_left, value, right}}
+    {min, updated_left} = extract_min(left)
+    {min, {:node, updated_left, value, right}}
   end
 
   # Fusión correcta de dos árboles después de eliminar un nodo
