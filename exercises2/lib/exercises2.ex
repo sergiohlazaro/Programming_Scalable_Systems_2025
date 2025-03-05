@@ -318,10 +318,31 @@ defmodule Sheet2 do
     |> Enum.map(fn {row1, row2} -> zip_with(&+/2, row1, row2) end)
   end
 
+  # def zip_with(func, list1, list2) do
+  #  list1
+  #  |> Enum.zip(list2)
+  #  |> Enum.map(fn {x, y} -> func.(x, y) end)
+  # end
+  
+  #Solucion para zip_with para recibir listas de diferentes tamaños o vacias
+  def zip_with(_func, [], []), do: []  # Caso base: listas vacías
+  def zip_with(_func, [], _), do: {:error, "Listas de diferente longitud"}
+  def zip_with(_func, _, []), do: {:error, "Listas de diferente longitud"}
+
   def zip_with(func, list1, list2) do
-    list1
-    |> Enum.zip(list2)
-    |> Enum.map(fn {x, y} -> func.(x, y) end)
+    if length(list1) == length(list2) do
+      list1
+      |> Enum.zip(list2)
+      |> Enum.map(fn {x, y} -> 
+        try do
+          func.(x, y)  # Intenta aplicar la función
+        rescue
+          ArithmeticError -> {:error, "Error aritmético en zip_with"}
+        end
+      end)
+    else
+      {:error, "Listas de diferente longitud"}
+    end
   end
 
   # Ejercicio 29: implementacion de transpose_ho/1 usando funciones de orden superior
@@ -355,7 +376,7 @@ defmodule Sheet2 do
 
   # Ejercicio 31: uso del operador & para funciones anonimas
 
-   # Ejercicio 32:
+  # Ejercicio 32:
   # map_tree/2
   def map_tree(:tip, _func), do: :tip
   def map_tree({:node, left, value, right}, func) do
@@ -376,6 +397,7 @@ defmodule Sheet2 do
     end
   end
 
+  # Solucion asegura que si el nodo eliminado tiene solo un hijo, lo reestructura correctamente
   defp merge_trees(:tip, right), do: right
   defp merge_trees(left, :tip), do: left
   defp merge_trees(left, right) do
