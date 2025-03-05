@@ -271,7 +271,7 @@ defmodule Sheet2 do
   # Ejercicio 24: implementacion de revonto_fold/2 usando List.foldr/3
   # Solucion problemas en revonto_fold
   def revonto_fold(xs, ys) do
-    List.foldr(xs, ys, fn x, acc -> acc ++ [x] end)
+    List.foldr(xs, ys, fn x, acc -> [x | acc] end)
   end
 
   # Ejercicio 25: implementacion de zip_with/3 usando Enum.map/2 y Enum.zip/2
@@ -326,24 +326,13 @@ defmodule Sheet2 do
   # end
   
   #Solucion para zip_with para recibir listas de diferentes tamaños o vacias
-  def zip_with(_func, [], []), do: []  # Caso base: listas vacías
+  def zip_with(_func, [], []), do: []
   def zip_with(_func, [], _), do: {:error, "Listas de diferente longitud"}
   def zip_with(_func, _, []), do: {:error, "Listas de diferente longitud"}
 
-  def zip_with(func, list1, list2) do
-    if length(list1) == length(list2) do
-      list1
-      |> Enum.zip(list2)
-      |> Enum.map(fn {x, y} -> 
-        try do
-          func.(x, y)  # Intenta aplicar la función
-        rescue
-          ArithmeticError -> {:error, "Error aritmético en zip_with"}
-        end
-      end)
-    else
-      {:error, "Listas de diferente longitud"}
-    end
+  def zip_with(func, list1, list2) when length(list1) == length(list2) do
+    Enum.zip(list1, list2)
+    |> Enum.map(fn {x, y} -> func.(x, y) end)
   end
 
   # Ejercicio 29: implementacion de transpose_ho/1 usando funciones de orden superior
@@ -392,9 +381,9 @@ defmodule Sheet2 do
     new_right = filter_tree(right, func)
 
     if func.(value) do
-      {:node, new_left, value, new_right}  # Mantener nodo si cumple condición
+      {:node, new_left, value, new_right}
     else
-      merge_trees(new_left, new_right)  # Eliminar nodo si no cumple condición
+      merge_trees(new_left, new_right)
     end
   end
 
