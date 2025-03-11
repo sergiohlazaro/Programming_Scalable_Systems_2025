@@ -193,7 +193,15 @@ defmodule Sheet2 do
   # Recorrido en orden del árbol
   def inorder(:tip), do: []
   def inorder({:node, left, value, right}) do
-    inorder(left) ++ [value] ++ inorder(right)
+    left_values = inorder(left)
+    right_values = inorder(right)
+
+    case {left_values, right_values} do
+      {[], []} -> [value]
+      {[], _} -> [value | right_values]
+      {_, []} -> left_values ++ [value]
+      {_, _} -> left_values ++ [value] ++ right_values
+    end
   end
 
   # Ordenar una lista usando Tree Sort
@@ -208,6 +216,10 @@ defmodule Sheet2 do
 
   def tree_insert({:node, left, val, right}, value) when value < val do
     {:node, tree_insert(left, value), val, right}
+  end
+
+  def tree_insert({:node, left, val, right}, value) when value > val do
+    {:node, left, val, tree_insert(right, value)}
   end
 
   def tree_insert({:node, left, val, right}, value) do
@@ -382,33 +394,36 @@ defmodule Sheet2 do
     new_right = filter_tree(right, func)
 
     if func.(value) do
-      {:node, new_left, value, new_right}  # Mantener el nodo si cumple la condición
+      {:node, new_left, value, remove_all_occurrences(new_right, value)}
     else
-      # Si el nodo no cumple la condición, eliminarlo correctamente
-      cond do
-        new_left == :tip and new_right == :tip -> :tip  # Si no tiene hijos, eliminarlo
-        new_left == :tip -> new_right  # Si solo tiene hijo derecho, devolverlo
-        new_right == :tip -> new_left  # Si solo tiene hijo izquierdo, devolverlo
-        true ->
-          # Si tiene ambos hijos, encontrar el mínimo del subárbol derecho y reemplazar el nodo actual
-          {min_value, updated_right} = extract_min(new_right)
-          {:node, new_left, min_value, updated_right}
-      end
+      merge_subtrees(new_left, new_right, value)
     end
   end
 
-  # Encuentra y elimina el nodo mínimo en el subárbol derecho
-  defp extract_min({:node, :tip, value, right}), do: {value, right}
-  defp extract_min({:node, left, value, right}) do
-    {min, updated_left} = extract_min(left)
-    {min, {:node, updated_left, value, right}}
+  defp remove_all_occurrences(:tip, _target), do: :tip
+  defp remove_all_occurrences({:node, left, value, right}, target) do
+    if value == target do
+      remove_all_occurrences(right, target)  
+    else
+      {:node, remove_all_occurrences(left, target), value, remove_all_occurrences(right, target)}
+    end
   end
 
-  # Fusión correcta de dos árboles después de eliminar un nodo
-  # defp merge_trees(:tip, right), do: right
-  # defp merge_trees(left, :tip), do: left
-  # defp merge_trees(left, right) do
-  #  {min_value, new_right} = extract_min(right)  # Extraer mínimo del subárbol derecho
-  #  {:node, left, min_value, new_right}
-  # end
+  defp merge_subtrees(:tip, right, _value), do: right
+  defp merge_subtrees(left, :tip, _value), do: left
+  defp merge_subtrees(left, right, value) do
+    {min_value, updated_right} = extract_min(right)
+
+    if min_value == value do
+      merge_subtrees(left, updated_right, value)
+    else
+      {:node, left, min_value, updated_right}
+    end
+  end
+
+  defp extract_min({:node, :tip, value, right}), do: {value, right}
+  defp extract_min({:node, left, value, right}) do
+    {min_value, updated_left} = extract_min(left)
+    {min_value, {:node, updated_left, value, right}}
+  end
 end
