@@ -394,36 +394,38 @@ defmodule Sheet2 do
     new_right = filter_tree(right, func)
 
     if func.(value) do
+      # Keep the value but remove all duplicates from right subtree
       {:node, new_left, value, remove_all_occurrences(new_right, value)}
     else
-      merge_subtrees(new_left, new_right, value)
+      # Remove the value completely, ensuring duplicates are removed
+      remove_all_occurrences(merge_subtrees(new_left, new_right), value)
     end
   end
 
-  defp remove_all_occurrences(:tip, _target), do: :tip
+  defp remove_all_occurrences(:tip, _value), do: :tip
+
+  defp remove_all_occurrences({:node, left, value, right}, target) when value == target do
+    # Merge left and right subtrees while ensuring all duplicates are removed
+    merge_subtrees(remove_all_occurrences(left, target), remove_all_occurrences(right, target))
+  end
+
   defp remove_all_occurrences({:node, left, value, right}, target) do
-    if value == target do
-      remove_all_occurrences(right, target)  
-    else
-      {:node, remove_all_occurrences(left, target), value, remove_all_occurrences(right, target)}
-    end
+    {:node, remove_all_occurrences(left, target), value, remove_all_occurrences(right, target)}
   end
 
-  defp merge_subtrees(:tip, right, _value), do: right
-  defp merge_subtrees(left, :tip, _value), do: left
-  defp merge_subtrees(left, right, value) do
+  # Merges two BST subtrees
+  defp merge_subtrees(:tip, right), do: right
+  defp merge_subtrees(left, :tip), do: left
+  defp merge_subtrees(left, right) do
     {min_value, updated_right} = extract_min(right)
-
-    if min_value == value do
-      merge_subtrees(left, updated_right, value)
-    else
-      {:node, left, min_value, updated_right}
-    end
+    {:node, left, min_value, updated_right}
   end
 
+  # Extracts the minimum value from the tree
   defp extract_min({:node, :tip, value, right}), do: {value, right}
   defp extract_min({:node, left, value, right}) do
     {min_value, updated_left} = extract_min(left)
     {min_value, {:node, updated_left, value, right}}
   end
+
 end

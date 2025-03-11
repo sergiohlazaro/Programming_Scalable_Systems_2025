@@ -1,0 +1,171 @@
+....................................................................................................
+OK: Passed 100 test(s).
+........
+
+Assertion with == failed
+code:  assert Sheet2.inorder(Sheet2.filter_tree(Enum.reduce([3, 5, 1], :tip, fn elem, t -> Sheet2.tree_insert(t, elem) end), smaller_than_3)) == filter_nodes(Enum.reduce([3, 5, 1], :tip, fn elem, t -> Sheet2.tree_insert(t, elem) end), smaller_than_3)
+left:  [1]
+right: []
+stacktrace:
+    (ex_unit 1.10.4) lib/ex_unit/assertions.ex:393: ExUnit.Assertions.assert/2
+    test/prop_sheet2_test.exs:127: anonymous fn/5 in Sheet2Properties."property filter_tree"/1
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1833: :proper.apply_args/4
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1518: :proper.perform/7
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1257: :proper.inner_test/2
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1239: :proper.test/2
+    (propcheck 1.4.1) lib/properties.ex:183: PropCheck.Properties.execute_property/4
+    test/prop_sheet2_test.exs:123: Sheet2Properties."property filter_tree"/1
+    (ex_unit 1.10.4) lib/ex_unit/runner.ex:355: ExUnit.Runner.exec_test/1
+    (stdlib 3.12.1.2) timer.erl:166: :timer.tc/1
+    (ex_unit 1.10.4) lib/ex_unit/runner.ex:306: anonymous fn/4 in ExUnit.Runner.spawn_test_monitor/4
+
+!
+Failed: After 8 test(s).
+[3, 5, 1]
+
+Shrinking 
+
+Assertion with == failed
+code:  assert Sheet2.inorder(Sheet2.filter_tree(Enum.reduce([5, 1], :tip, fn elem, t -> Sheet2.tree_insert(t, elem) end), smaller_than_3)) == filter_nodes(Enum.reduce([5, 1], :tip, fn elem, t -> Sheet2.tree_insert(t, elem) end), smaller_than_3)
+left:  [1]
+right: []
+stacktrace:
+    (ex_unit 1.10.4) lib/ex_unit/assertions.ex:393: ExUnit.Assertions.assert/2
+    test/prop_sheet2_test.exs:127: anonymous fn/5 in Sheet2Properties."property filter_tree"/1
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1833: :proper.apply_args/4
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:2084: :proper.still_fails/4
+    (proper 1.4.0) /deliverit/deps/proper/src/proper_arith.erl:145: :proper_arith.find_first_tr/3
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:2036: :proper.shrink/8
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1989: :proper.fix_shrink/6
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1958: :proper.shrink/4
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1397: :proper.get_result/3
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1261: :proper.inner_test/2
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1239: :proper.test/2
+    (propcheck 1.4.1) lib/properties.ex:183: PropCheck.Properties.execute_property/4
+    test/prop_sheet2_test.exs:123: Sheet2Properties."property filter_tree"/1
+    (ex_unit 1.10.4) lib/ex_unit/runner.ex:355: ExUnit.Runner.exec_test/1
+    (stdlib 3.12.1.2) timer.erl:166: :timer.tc/1
+    (ex_unit 1.10.4) lib/ex_unit/runner.ex:306: anonymous fn/4 in ExUnit.Runner.spawn_test_monitor/4
+
+.
+
+Assertion with == failed
+code:  assert Sheet2.inorder(Sheet2.filter_tree(Enum.reduce([1, 1], :tip, fn elem, t -> Sheet2.tree_insert(t, elem) end), smaller_than_3)) == filter_nodes(Enum.reduce([1, 1], :tip, fn elem, t -> Sheet2.tree_insert(t, elem) end), smaller_than_3)
+left:  [1]
+right: [1, 1]
+stacktrace:
+    (ex_unit 1.10.4) lib/ex_unit/assertions.ex:393: ExUnit.Assertions.assert/2
+    test/prop_sheet2_test.exs:127: anonymous fn/5 in Sheet2Properties."property filter_tree"/1
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1833: :proper.apply_args/4
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:2084: :proper.still_fails/4
+    (proper 1.4.0) /deliverit/deps/proper/src/proper_arith.erl:145: :proper_arith.find_first_tr/3
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:2036: :proper.shrink/8
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1989: :proper.fix_shrink/6
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1958: :proper.shrink/4
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1397: :proper.get_result/3
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1261: :proper.inner_test/2
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1239: :proper.test/2
+    (propcheck 1.4.1) lib/properties.ex:183: PropCheck.Properties.execute_property/4
+    test/prop_sheet2_test.exs:123: Sheet2Properties."property filter_tree"/1
+    (ex_unit 1.10.4) lib/ex_unit/runner.ex:355: ExUnit.Runner.exec_test/1
+    (stdlib 3.12.1.2) timer.erl:166: :timer.tc/1
+    (ex_unit 1.10.4) lib/ex_unit/runner.ex:306: anonymous fn/4 in ExUnit.Runner.spawn_test_monitor/4
+
+.
+
+Assertion with == failed
+code:  assert Sheet2.inorder(Sheet2.filter_tree(Enum.reduce([1, 1], :tip, fn elem, t -> Sheet2.tree_insert(t, elem) end), smaller_than_3)) == filter_nodes(Enum.reduce([1, 1], :tip, fn elem, t -> Sheet2.tree_insert(t, elem) end), smaller_than_3)
+left:  [1]
+right: [1, 1]
+stacktrace:
+    (ex_unit 1.10.4) lib/ex_unit/assertions.ex:393: ExUnit.Assertions.assert/2
+    test/prop_sheet2_test.exs:127: anonymous fn/5 in Sheet2Properties."property filter_tree"/1
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:2178: :proper.apply_skip/2
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:2010: :proper.shrink/8
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1989: :proper.fix_shrink/6
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1958: :proper.shrink/4
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1397: :proper.get_result/3
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1261: :proper.inner_test/2
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1239: :proper.test/2
+    (propcheck 1.4.1) lib/properties.ex:183: PropCheck.Properties.execute_property/4
+    test/prop_sheet2_test.exs:123: Sheet2Properties."property filter_tree"/1
+    (ex_unit 1.10.4) lib/ex_unit/runner.ex:355: ExUnit.Runner.exec_test/1
+    (stdlib 3.12.1.2) timer.erl:166: :timer.tc/1
+    (ex_unit 1.10.4) lib/ex_unit/runner.ex:306: anonymous fn/4 in ExUnit.Runner.spawn_test_monitor/4
+
+
+
+Assertion with == failed
+code:  assert Sheet2.inorder(Sheet2.filter_tree(Enum.reduce([1, 1], :tip, fn elem, t -> Sheet2.tree_insert(t, elem) end), smaller_than_3)) == filter_nodes(Enum.reduce([1, 1], :tip, fn elem, t -> Sheet2.tree_insert(t, elem) end), smaller_than_3)
+left:  [1]
+right: [1, 1]
+stacktrace:
+    (ex_unit 1.10.4) lib/ex_unit/assertions.ex:393: ExUnit.Assertions.assert/2
+    test/prop_sheet2_test.exs:127: anonymous fn/5 in Sheet2Properties."property filter_tree"/1
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:2178: :proper.apply_skip/2
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:2010: :proper.shrink/8
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1989: :proper.fix_shrink/6
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1958: :proper.shrink/4
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1397: :proper.get_result/3
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1261: :proper.inner_test/2
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1239: :proper.test/2
+    (propcheck 1.4.1) lib/properties.ex:183: PropCheck.Properties.execute_property/4
+    test/prop_sheet2_test.exs:123: Sheet2Properties."property filter_tree"/1
+    (ex_unit 1.10.4) lib/ex_unit/runner.ex:355: ExUnit.Runner.exec_test/1
+    (stdlib 3.12.1.2) timer.erl:166: :timer.tc/1
+    (ex_unit 1.10.4) lib/ex_unit/runner.ex:306: anonymous fn/4 in ExUnit.Runner.spawn_test_monitor/4
+
+
+
+Assertion with == failed
+code:  assert Sheet2.inorder(Sheet2.filter_tree(Enum.reduce([1, 1], :tip, fn elem, t -> Sheet2.tree_insert(t, elem) end), smaller_than_3)) == filter_nodes(Enum.reduce([1, 1], :tip, fn elem, t -> Sheet2.tree_insert(t, elem) end), smaller_than_3)
+left:  [1]
+right: [1, 1]
+stacktrace:
+    (ex_unit 1.10.4) lib/ex_unit/assertions.ex:393: ExUnit.Assertions.assert/2
+    test/prop_sheet2_test.exs:127: anonymous fn/5 in Sheet2Properties."property filter_tree"/1
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1833: :proper.apply_args/4
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1961: :proper.shrink/4
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1397: :proper.get_result/3
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1261: :proper.inner_test/2
+    (proper 1.4.0) /deliverit/deps/proper/src/proper.erl:1239: :proper.test/2
+    (propcheck 1.4.1) lib/properties.ex:183: PropCheck.Properties.execute_property/4
+    test/prop_sheet2_test.exs:123: Sheet2Properties."property filter_tree"/1
+    (ex_unit 1.10.4) lib/ex_unit/runner.ex:355: ExUnit.Runner.exec_test/1
+    (stdlib 3.12.1.2) timer.erl:166: :timer.tc/1
+    (ex_unit 1.10.4) lib/ex_unit/runner.ex:306: anonymous fn/4 in ExUnit.Runner.spawn_test_monitor/4
+
+(2 time(s))
+[1, 1]
+............
+
+  1) property filter_tree (Sheet2Properties)
+     test/prop_sheet2_test.exs:123
+     Property Elixir.Sheet2Properties.property filter_tree() failed. Counter-Example is:
+     [[1, 1]]
+     
+     Counter example stored.
+     
+     code: nil
+     stacktrace:
+       (propcheck 1.4.1) lib/properties.ex:244: PropCheck.Properties.handle_check_results/2
+       test/prop_sheet2_test.exs:123: (test)
+
+........................................................................................
+OK: Passed 100 test(s).
+.....................................................................................................
+OK: Passed 100 test(s).
+.....................................................................................................
+OK: Passed 100 test(s).
+.....................................................................................................
+OK: Passed 100 test(s).
+.....................................................................................................
+OK: Passed 100 test(s).
+.....................................................................................................
+OK: Passed 100 test(s).
+.....................................................................................................
+OK: Passed 100 test(s).
+...................................
+
+Finished in 0.2 seconds
+9 properties, 34 tests, 1 failure
