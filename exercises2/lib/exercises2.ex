@@ -196,11 +196,11 @@ defmodule Sheet2 do
     left_values = inorder(left)
     right_values = inorder(right)
 
-    case {left_values, right_values} do
-      {[], []} -> [value]
-      {[], _} -> [value | right_values]
-      {_, []} -> left_values ++ [value]
-      {_, _} -> left_values ++ [value] ++ right_values
+    # Si el nodo está solo, devolver su valor en la lista
+    if left_values == [] and right_values == [] do
+      [value]
+    else
+      left_values ++ [value] ++ right_values
     end
   end
 
@@ -391,61 +391,40 @@ defmodule Sheet2 do
 
   def filter_tree({:node, left, value, right}, func) do
     IO.puts("Procesando nodo con valor: #{value}")
+
     new_left = filter_tree(left, func)
     new_right = filter_tree(right, func)
 
     if func.(value) do
       IO.puts("Manteniendo nodo: #{value}")
-      IO.puts("Subárbol derecho después de eliminar duplicados:")
-      IO.inspect(remove_all_occurrences(new_right, value))
-
-      {:node, new_left, value, remove_all_occurrences(new_right, value)}
+      {:node, new_left, value, new_right}
     else
       IO.puts("Eliminando nodo: #{value}")
-      merged = merge_subtrees(new_left, new_right)
-      IO.puts("Subárbol fusionado:")
-      IO.inspect(merged)
 
-      remove_all_occurrences(merge_subtrees(new_left, new_right), value)
+      # Si no tiene hijos válidos, eliminamos completamente el nodo.
+      case {new_left, new_right} do
+        {:tip, :tip} -> :tip
+        {l, :tip} -> l
+        {:tip, r} -> r
+        {l, r} ->
+          {min_value, updated_right} = extract_min(r)
+          IO.puts("Reemplazando con min_value: #{min_value}")
+          {:node, l, min_value, updated_right}
+      end
     end
   end
 
-  def remove_all_occurrences(:tip, _value), do: :tip
-
-  def remove_all_occurrences({:node, left, value, right}, target) when value == target do
-    IO.puts("Eliminando nodo con valor duplicado: #{value}")
-    IO.puts("Fusionando subárboles:")
-    IO.inspect(left)
-    IO.inspect(right)
-    
-    merge_subtrees(remove_all_occurrences(left, target), remove_all_occurrences(right, target))
+  defp extract_min({:node, :tip, value, right}), do: {value, right}
+  defp extract_min({:node, left, value, right}) do
+    {min_value, updated_left} = extract_min(left)
+    {min_value, {:node, updated_left, value, right}}
   end
 
-  def remove_all_occurrences({:node, left, value, right}, target) do
-    {:node, remove_all_occurrences(left, target), value, remove_all_occurrences(right, target)}
-  end
-
-  def merge_subtrees(:tip, right), do: right
-  def merge_subtrees(left, :tip), do: left
-  def merge_subtrees(left, right) do
+  defp merge_subtrees(:tip, right), do: right
+  defp merge_subtrees(left, :tip), do: left
+  defp merge_subtrees(left, right) do
     {min_value, updated_right} = extract_min(right)
     {:node, left, min_value, updated_right}
-  end
-
-  def extract_min({:node, :tip, value, right}) do
-    # Si el nodo mínimo tiene copias en el subárbol derecho, las eliminamos también
-    {value, remove_all_occurrences(right, value)}
-  end
-
-  def extract_min({:node, left, value, right}) do
-    {min_value, updated_left} = extract_min(left)
-
-    # Si el mínimo es el mismo que el valor del nodo actual, eliminamos el nodo también
-    if min_value == value do
-      extract_min(updated_left)
-    else
-      {min_value, {:node, updated_left, value, right}}
-    end
   end
 
 end

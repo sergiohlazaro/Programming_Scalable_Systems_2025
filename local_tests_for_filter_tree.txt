@@ -1,0 +1,453 @@
+iex(1)> tree = Enum.reduce([1, 2, 3, 4, 5], :tip, fn elem, t -> Sheet2.tree_insert(t, elem) end)
+{:node, :tip, 1,
+ {:node, :tip, 2, {:node, :tip, 3, {:node, :tip, 4, {:node, :tip, 5, :tip}}}}}
+iex(2)> IO.puts("Árbol original:")
+Árbol original:
+:ok
+iex(3)> IO.inspect(tree)
+{:node, :tip, 1,
+ {:node, :tip, 2, {:node, :tip, 3, {:node, :tip, 4, {:node, :tip, 5, :tip}}}}}
+{:node, :tip, 1,
+ {:node, :tip, 2, {:node, :tip, 3, {:node, :tip, 4, {:node, :tip, 5, :tip}}}}}
+iex(4)> filtered_tree = Sheet2.filter_tree(tree, fn x -> x >= 3 end)
+Procesando nodo con valor: 1
+Procesando nodo con valor: 2
+Procesando nodo con valor: 3
+Procesando nodo con valor: 4
+Procesando nodo con valor: 5
+Manteniendo nodo: 5
+Subárbol derecho después de eliminar duplicados:
+:tip
+Manteniendo nodo: 4
+Subárbol derecho después de eliminar duplicados:
+{:node, :tip, 5, :tip}
+Manteniendo nodo: 3
+Subárbol derecho después de eliminar duplicados:
+{:node, :tip, 4, {:node, :tip, 5, :tip}}
+Eliminando nodo: 2
+Subárbol fusionado:
+{:node, :tip, 3, {:node, :tip, 4, {:node, :tip, 5, :tip}}}
+Eliminando nodo: 1
+Subárbol fusionado:
+{:node, :tip, 3, {:node, :tip, 4, {:node, :tip, 5, :tip}}}
+{:node, :tip, 3, {:node, :tip, 4, {:node, :tip, 5, :tip}}}
+iex(5)> IO.puts("Árbol después de aplicar filter_tree (x >= 3):")
+Árbol después de aplicar filter_tree (x >= 3):
+:ok
+iex(6)> IO.inspect(filtered_tree)
+{:node, :tip, 3, {:node, :tip, 4, {:node, :tip, 5, :tip}}}
+{:node, :tip, 3, {:node, :tip, 4, {:node, :tip, 5, :tip}}}
+iex(7)> filtered_tree2 = Sheet2.filter_tree(tree, fn x -> x <= 3 end)
+Procesando nodo con valor: 1
+Procesando nodo con valor: 2
+Procesando nodo con valor: 3
+Procesando nodo con valor: 4
+Procesando nodo con valor: 5
+Eliminando nodo: 5
+Subárbol fusionado:
+:tip
+Eliminando nodo: 4
+Subárbol fusionado:
+:tip
+Manteniendo nodo: 3
+Subárbol derecho después de eliminar duplicados:
+:tip
+Manteniendo nodo: 2
+Subárbol derecho después de eliminar duplicados:
+{:node, :tip, 3, :tip}
+Manteniendo nodo: 1
+Subárbol derecho después de eliminar duplicados:
+{:node, :tip, 2, {:node, :tip, 3, :tip}}
+{:node, :tip, 1, {:node, :tip, 2, {:node, :tip, 3, :tip}}}
+iex(8)> IO.puts("Árbol después de aplicar filter_tree (x <= 3):")
+Árbol después de aplicar filter_tree (x <= 3):
+:ok
+iex(9)> IO.inspect(filtered_tree2)
+{:node, :tip, 1, {:node, :tip, 2, {:node, :tip, 3, :tip}}}
+{:node, :tip, 1, {:node, :tip, 2, {:node, :tip, 3, :tip}}}
+iex(10)> filtered_tree3 = Sheet2.filter_tree(tree, fn x -> rem(x, 2) == 0 end)
+Procesando nodo con valor: 1
+Procesando nodo con valor: 2
+Procesando nodo con valor: 3
+Procesando nodo con valor: 4
+Procesando nodo con valor: 5
+Eliminando nodo: 5
+Subárbol fusionado:
+:tip
+Manteniendo nodo: 4
+Subárbol derecho después de eliminar duplicados:
+:tip
+Eliminando nodo: 3
+Subárbol fusionado:
+{:node, :tip, 4, :tip}
+Manteniendo nodo: 2
+Subárbol derecho después de eliminar duplicados:
+{:node, :tip, 4, :tip}
+Eliminando nodo: 1
+Subárbol fusionado:
+{:node, :tip, 2, {:node, :tip, 4, :tip}}
+{:node, :tip, 2, {:node, :tip, 4, :tip}}
+iex(11)> IO.puts("Árbol después de aplicar filter_tree (números pares):")
+Árbol después de aplicar filter_tree (números pares):
+:ok
+iex(12)> IO.inspect(filtered_tree3)
+{:node, :tip, 2, {:node, :tip, 4, :tip}}
+{:node, :tip, 2, {:node, :tip, 4, :tip}}
+iex(13)> tree1 = Enum.reduce([10, 5, 15, 3, 7, 13, 17, 1, 4, 6, 8, 12, 14, 16, 18], :tip, fn elem, t ->   Sh
+eet2.tree_insert(t, elem) end)
+{:node,
+ {:node, {:node, {:node, :tip, 1, :tip}, 3, {:node, :tip, 4, :tip}}, 5,
+  {:node, {:node, :tip, 6, :tip}, 7, {:node, :tip, 8, :tip}}}, 10,
+ {:node, {:node, {:node, :tip, 12, :tip}, 13, {:node, :tip, 14, :tip}}, 15,
+  {:node, {:node, :tip, 16, :tip}, 17, {:node, :tip, 18, :tip}}}}
+iex(14)> IO.puts("Árbol Complejo Original:")
+Árbol Complejo Original:
+:ok
+iex(15)> IO.inspect(tree1)
+{:node,
+ {:node, {:node, {:node, :tip, 1, :tip}, 3, {:node, :tip, 4, :tip}}, 5,
+  {:node, {:node, :tip, 6, :tip}, 7, {:node, :tip, 8, :tip}}}, 10,
+ {:node, {:node, {:node, :tip, 12, :tip}, 13, {:node, :tip, 14, :tip}}, 15,
+  {:node, {:node, :tip, 16, :tip}, 17, {:node, :tip, 18, :tip}}}}
+{:node,
+ {:node, {:node, {:node, :tip, 1, :tip}, 3, {:node, :tip, 4, :tip}}, 5,
+  {:node, {:node, :tip, 6, :tip}, 7, {:node, :tip, 8, :tip}}}, 10,
+ {:node, {:node, {:node, :tip, 12, :tip}, 13, {:node, :tip, 14, :tip}}, 15,
+  {:node, {:node, :tip, 16, :tip}, 17, {:node, :tip, 18, :tip}}}}
+iex(16)> filtered_tree1 = Sheet2.filter_tree(tree1, fn x -> x >= 7 end)
+Procesando nodo con valor: 10
+Procesando nodo con valor: 5
+Procesando nodo con valor: 3
+Procesando nodo con valor: 1
+Eliminando nodo: 1
+Subárbol fusionado:
+:tip
+Procesando nodo con valor: 4
+Eliminando nodo: 4
+Subárbol fusionado:
+:tip
+Eliminando nodo: 3
+Subárbol fusionado:
+:tip
+Procesando nodo con valor: 7
+Procesando nodo con valor: 6
+Eliminando nodo: 6
+Subárbol fusionado:
+:tip
+Procesando nodo con valor: 8
+Manteniendo nodo: 8
+Subárbol derecho después de eliminar duplicados:
+:tip
+Manteniendo nodo: 7
+Subárbol derecho después de eliminar duplicados:
+{:node, :tip, 8, :tip}
+Eliminando nodo: 5
+Subárbol fusionado:
+{:node, :tip, 7, {:node, :tip, 8, :tip}}
+Procesando nodo con valor: 15
+Procesando nodo con valor: 13
+Procesando nodo con valor: 12
+Manteniendo nodo: 12
+Subárbol derecho después de eliminar duplicados:
+:tip
+Procesando nodo con valor: 14
+Manteniendo nodo: 14
+Subárbol derecho después de eliminar duplicados:
+:tip
+Manteniendo nodo: 13
+Subárbol derecho después de eliminar duplicados:
+{:node, :tip, 14, :tip}
+Procesando nodo con valor: 17
+Procesando nodo con valor: 16
+Manteniendo nodo: 16
+Subárbol derecho después de eliminar duplicados:
+:tip
+Procesando nodo con valor: 18
+Manteniendo nodo: 18
+Subárbol derecho después de eliminar duplicados:
+:tip
+Manteniendo nodo: 17
+Subárbol derecho después de eliminar duplicados:
+{:node, :tip, 18, :tip}
+Manteniendo nodo: 15
+Subárbol derecho después de eliminar duplicados:
+{:node, {:node, :tip, 16, :tip}, 17, {:node, :tip, 18, :tip}}
+Manteniendo nodo: 10
+Subárbol derecho después de eliminar duplicados:
+{:node, {:node, {:node, :tip, 12, :tip}, 13, {:node, :tip, 14, :tip}}, 15,
+ {:node, {:node, :tip, 16, :tip}, 17, {:node, :tip, 18, :tip}}}
+{:node, {:node, :tip, 7, {:node, :tip, 8, :tip}}, 10,
+ {:node, {:node, {:node, :tip, 12, :tip}, 13, {:node, :tip, 14, :tip}}, 15,
+  {:node, {:node, :tip, 16, :tip}, 17, {:node, :tip, 18, :tip}}}}
+iex(17)> IO.puts("Árbol después de aplicar filter_tree (x >= 7):")   
+Árbol después de aplicar filter_tree (x >= 7):
+:ok
+iex(18)> IO.inspect(filtered_tree1)
+{:node, {:node, :tip, 7, {:node, :tip, 8, :tip}}, 10,
+ {:node, {:node, {:node, :tip, 12, :tip}, 13, {:node, :tip, 14, :tip}}, 15,
+  {:node, {:node, :tip, 16, :tip}, 17, {:node, :tip, 18, :tip}}}}
+{:node, {:node, :tip, 7, {:node, :tip, 8, :tip}}, 10,
+ {:node, {:node, {:node, :tip, 12, :tip}, 13, {:node, :tip, 14, :tip}}, 15,
+  {:node, {:node, :tip, 16, :tip}, 17, {:node, :tip, 18, :tip}}}}
+iex(19)> 
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+iex(23)> tree2 = Enum.reduce([6, 6, 9, 3, 12, 15, 18, 3, 6, 9, 12], :tip, fn elem, t ->   Sheet2.tree_insert
+(t, elem) end)
+{:node, {:node, :tip, 3, {:node, :tip, 3, :tip}}, 6,
+ {:node, :tip, 6,
+  {:node, {:node, :tip, 6, :tip}, 9,
+   {:node, {:node, :tip, 9, :tip}, 12,
+    {:node, {:node, :tip, 12, :tip}, 15, {:node, :tip, 18, :tip}}}}}}
+iex(24)> IO.puts("Árbol con Duplicados:")                                                                   
+Árbol con Duplicados:
+:ok
+iex(25)> IO.inspect(tree2)                                                                                  
+{:node, {:node, :tip, 3, {:node, :tip, 3, :tip}}, 6,
+ {:node, :tip, 6,
+  {:node, {:node, :tip, 6, :tip}, 9,
+   {:node, {:node, :tip, 9, :tip}, 12,
+    {:node, {:node, :tip, 12, :tip}, 15, {:node, :tip, 18, :tip}}}}}}
+{:node, {:node, :tip, 3, {:node, :tip, 3, :tip}}, 6,
+ {:node, :tip, 6,
+  {:node, {:node, :tip, 6, :tip}, 9,
+   {:node, {:node, :tip, 9, :tip}, 12,
+    {:node, {:node, :tip, 12, :tip}, 15, {:node, :tip, 18, :tip}}}}}}
+iex(26)> filtered_tree2 = Sheet2.filter_tree(tree2, fn x -> rem(x, 3) != 0 end)
+Procesando nodo con valor: 6
+Procesando nodo con valor: 3
+Procesando nodo con valor: 3
+Eliminando nodo: 3
+Subárbol fusionado:
+:tip
+Eliminando nodo: 3
+Subárbol fusionado:
+:tip
+Procesando nodo con valor: 6
+Procesando nodo con valor: 9
+Procesando nodo con valor: 6
+Eliminando nodo: 6
+Subárbol fusionado:
+:tip
+Procesando nodo con valor: 12
+Procesando nodo con valor: 9
+Eliminando nodo: 9
+Subárbol fusionado:
+:tip
+Procesando nodo con valor: 15
+Procesando nodo con valor: 12
+Eliminando nodo: 12
+Subárbol fusionado:
+:tip
+Procesando nodo con valor: 18
+Eliminando nodo: 18
+Subárbol fusionado:
+:tip
+Eliminando nodo: 15
+Subárbol fusionado:
+:tip
+Eliminando nodo: 12
+Subárbol fusionado:
+:tip
+Eliminando nodo: 9
+Subárbol fusionado:
+:tip
+Eliminando nodo: 6
+Subárbol fusionado:
+:tip
+Eliminando nodo: 6
+Subárbol fusionado:
+:tip
+:tip
+iex(27)> IO.puts("Árbol después de aplicar filter_tree (eliminar múltiplos de 3):")   
+Árbol después de aplicar filter_tree (eliminar múltiplos de 3):
+:ok
+iex(28)> IO.inspect(filtered_tree2)
+:tip
+:tip
+iex(29)>
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+iex(33)> tree3 = Enum.reduce([8, 4, 4, 10, 12, 14, 16, 18, 20, 22, 8, 12, 16], :tip, fn elem, t ->   Sheet2.
+tree_insert(t, elem) end)
+{:node, {:node, :tip, 4, {:node, :tip, 4, :tip}}, 8,
+ {:node, {:node, :tip, 8, :tip}, 10,
+  {:node, :tip, 12,
+   {:node, {:node, :tip, 12, :tip}, 14,
+    {:node, :tip, 16,
+     {:node, {:node, :tip, 16, :tip}, 18,
+      {:node, :tip, 20, {:node, :tip, 22, :tip}}}}}}}}
+iex(34)> IO.puts("Árbol con Duplicados Pares:")                                                             
+Árbol con Duplicados Pares:
+:ok
+iex(35)> IO.inspect(tree3)                                                                                  
+{:node, {:node, :tip, 4, {:node, :tip, 4, :tip}}, 8,
+ {:node, {:node, :tip, 8, :tip}, 10,
+  {:node, :tip, 12,
+   {:node, {:node, :tip, 12, :tip}, 14,
+    {:node, :tip, 16,
+     {:node, {:node, :tip, 16, :tip}, 18,
+      {:node, :tip, 20, {:node, :tip, 22, :tip}}}}}}}}
+{:node, {:node, :tip, 4, {:node, :tip, 4, :tip}}, 8,
+ {:node, {:node, :tip, 8, :tip}, 10,
+  {:node, :tip, 12,
+   {:node, {:node, :tip, 12, :tip}, 14,
+    {:node, :tip, 16,
+     {:node, {:node, :tip, 16, :tip}, 18,
+      {:node, :tip, 20, {:node, :tip, 22, :tip}}}}}}}}
+iex(36)> filtered_tree3 = Sheet2.filter_tree(tree3, fn x -> rem(x, 2) != 0 end)
+Procesando nodo con valor: 8
+Procesando nodo con valor: 4
+Procesando nodo con valor: 4
+Eliminando nodo: 4
+Subárbol fusionado:
+:tip
+Eliminando nodo: 4
+Subárbol fusionado:
+:tip
+Procesando nodo con valor: 10
+Procesando nodo con valor: 8
+Eliminando nodo: 8
+Subárbol fusionado:
+:tip
+Procesando nodo con valor: 12
+Procesando nodo con valor: 14
+Procesando nodo con valor: 12
+Eliminando nodo: 12
+Subárbol fusionado:
+:tip
+Procesando nodo con valor: 16
+Procesando nodo con valor: 18
+Procesando nodo con valor: 16
+Eliminando nodo: 16
+Subárbol fusionado:
+:tip
+Procesando nodo con valor: 20
+Procesando nodo con valor: 22
+Eliminando nodo: 22
+Subárbol fusionado:
+:tip
+Eliminando nodo: 20
+Subárbol fusionado:
+:tip
+Eliminando nodo: 18
+Subárbol fusionado:
+:tip
+Eliminando nodo: 16
+Subárbol fusionado:
+:tip
+Eliminando nodo: 14
+Subárbol fusionado:
+:tip
+Eliminando nodo: 12
+Subárbol fusionado:
+:tip
+Eliminando nodo: 10
+Subárbol fusionado:
+:tip
+Eliminando nodo: 8
+Subárbol fusionado:
+:tip
+:tip
+iex(37)> IO.puts("Árbol después de aplicar filter_tree (eliminar pares):")   
+Árbol después de aplicar filter_tree (eliminar pares):
+:ok
+iex(38)> IO.inspect(filtered_tree3)
+:tip
+:tip
+iex(39)>
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+iex(43)> tree1 = Enum.reduce([3, 2, 5], :tip, fn elem, t -> Sheet2.tree_insert(t, elem) end)
+{:node, {:node, :tip, 2, :tip}, 3, {:node, :tip, 5, :tip}}
+iex(44)> IO.puts("Árbol original con `[3, 2, 5]`")
+Árbol original con `[3, 2, 5]`
+:ok
+iex(45)> IO.inspect(tree1)
+{:node, {:node, :tip, 2, :tip}, 3, {:node, :tip, 5, :tip}}
+{:node, {:node, :tip, 2, :tip}, 3, {:node, :tip, 5, :tip}}
+iex(46)> filtered_tree1 = Sheet2.filter_tree(tree1, fn x -> x < 3 end)
+Procesando nodo con valor: 3
+Procesando nodo con valor: 2
+Manteniendo nodo: 2
+Subárbol derecho después de eliminar duplicados:
+:tip
+Procesando nodo con valor: 5
+Eliminando nodo: 5
+Subárbol fusionado:
+:tip
+Eliminando nodo: 3
+Subárbol fusionado:
+{:node, :tip, 2, :tip}
+{:node, :tip, 2, :tip}
+iex(47)> IO.puts("Árbol después de aplicar `filter_tree` con condición `x < 3`")
+Árbol después de aplicar `filter_tree` con condición `x < 3`
+:ok
+iex(48)> IO.inspect(filtered_tree1)
+{:node, :tip, 2, :tip}
+{:node, :tip, 2, :tip}
+iex(49)> inorder_result1 = Sheet2.inorder(filtered_tree1)
+[2]
+iex(50)> expected_result1 = []
+[]
+iex(51)> IO.puts("Lista ordenada después de `inorder`:")
+Lista ordenada después de `inorder`:
+:ok
+iex(52)> IO.inspect(inorder_result1)
+[2]
+[2]
+iex(53)> IO.puts("Lista esperada:")
+Lista esperada:
+:ok
+iex(54)> IO.inspect(expected_result1)
+[]
+[]
+iex(55)> IO.puts("Comparación final:")
+Comparación final:
+:ok
+iex(56)> IO.inspect(inorder_result1 == expected_result1)
+false
+false
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+iex(63)> tree_test = Enum.reduce([4, 1, 5], :tip, fn elem, t -> Sheet2.tree_insert(t, elem) end)
+{:node, {:node, :tip, 1, :tip}, 4, {:node, :tip, 5, :tip}}
+iex(64)> IO.puts("Árbol original con `[4, 1, 5]`")
+Árbol original con `[4, 1, 5]`
+:ok
+iex(65)> IO.inspect(tree_test)
+{:node, {:node, :tip, 1, :tip}, 4, {:node, :tip, 5, :tip}}
+{:node, {:node, :tip, 1, :tip}, 4, {:node, :tip, 5, :tip}}
+iex(67)> filtered_tree_test = Sheet2.filter_tree(tree_test, fn x -> x > 10 end)
+Procesando nodo con valor: 4
+Procesando nodo con valor: 1
+Eliminando nodo: 1
+Subárbol fusionado:
+:tip
+Procesando nodo con valor: 5
+Eliminando nodo: 5
+Subárbol fusionado:
+:tip
+Eliminando nodo: 4
+Subárbol fusionado:
+:tip
+:tip
+iex(68)> IO.puts("Árbol después de `filter_tree(x > 10)` (debería quedar vacío)")
+Árbol después de `filter_tree(x > 10)` (debería quedar vacío)
+:ok
+iex(69)> IO.inspect(filtered_tree_test)
+:tip
+:tip
+iex(71)> inorder_result_test = Sheet2.inorder(filtered_tree_test)
+[]
+iex(72)> expected_result_test = []
+[]
+iex(73)> IO.puts("Lista ordenada después de `inorder`:")
+Lista ordenada después de `inorder`:
+:ok
+iex(74)> IO.inspect(inorder_result_test)
+[]
+[]
+iex(76)> IO.puts("Comparación final:")
+Comparación final:
+:ok
+iex(77)> IO.inspect(inorder_result_test == expected_result_test)
+true
+true
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
