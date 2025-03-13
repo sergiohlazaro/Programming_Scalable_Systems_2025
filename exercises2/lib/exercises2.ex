@@ -1,4 +1,6 @@
 defmodule Sheet2 do
+  # NOTA FINAL OBTENIDA. 10.00
+  
   # Ejercicio 1: longitud de una lista
   def len([]), do: 0
   def len([_ | tail]), do: 1 + len(tail)
@@ -339,13 +341,20 @@ defmodule Sheet2 do
   # end
   
   #Solucion para zip_with para recibir listas de diferentes tamaños o vacias
-  def zip_with([], [], _func), do: []  # Manejo de listas vacías
-
-  def zip_with([h1 | t1], [h2 | t2], func) do
-    [func.(h1, h2) | zip_with(t1, t2, func)]
+  # Corrección de zip_with/3
+  def zip_with([], [], _func) do
+    []
   end
 
-  def zip_with(_, _, _), do: []  # Si las listas no tienen la misma longitud, retorna []
+  def zip_with([h1 | t1], [h2 | t2], func) do
+    result = func.(h1, h2)
+
+    [result | zip_with(t1, t2, func)]
+  end
+
+  def zip_with(_, _, _) do
+    []
+  end
 
   # Ejercicio 29: implementacion de transpose_ho/1 usando funciones de orden superior
   # def transpose_ho([]), do: []
@@ -386,45 +395,26 @@ defmodule Sheet2 do
   end
 
   # Ejercicio 33: 
+  # El error estaba en que una vez el nodo no cumpla la condición se elimina el nodo y sus hijos
   # filter_tree/2
+  # Corrección de filter_tree/2
   def filter_tree(:tip, _func), do: :tip
 
   def filter_tree({:node, left, value, right}, func) do
     IO.puts("Procesando nodo con valor: #{value}")
 
-    new_left = filter_tree(left, func)
-    new_right = filter_tree(right, func)
-
     if func.(value) do
+      # Si el nodo cumple la condición, seguimos filtrando sus hijos
+      new_left = filter_tree(left, func)
+      new_right = filter_tree(right, func)
+      
       IO.puts("Manteniendo nodo: #{value}")
       {:node, new_left, value, new_right}
     else
-      IO.puts("Eliminando nodo: #{value}")
-
-      # Si no tiene hijos válidos, eliminamos completamente el nodo.
-      case {new_left, new_right} do
-        {:tip, :tip} -> :tip
-        {l, :tip} -> l
-        {:tip, r} -> r
-        {l, r} ->
-          {min_value, updated_right} = extract_min(r)
-          IO.puts("Reemplazando con min_value: #{min_value}")
-          {:node, l, min_value, updated_right}
-      end
+      # Si el nodo NO cumple la condición, lo eliminamos junto con sus hijos
+      IO.puts("Eliminando nodo #{value} y todos sus hijos")
+      :tip
     end
-  end
-
-  defp extract_min({:node, :tip, value, right}), do: {value, right}
-  defp extract_min({:node, left, value, right}) do
-    {min_value, updated_left} = extract_min(left)
-    {min_value, {:node, updated_left, value, right}}
-  end
-
-  defp merge_subtrees(:tip, right), do: right
-  defp merge_subtrees(left, :tip), do: left
-  defp merge_subtrees(left, right) do
-    {min_value, updated_right} = extract_min(right)
-    {:node, left, min_value, updated_right}
   end
 
 end

@@ -1,6 +1,4 @@
-[33mwarning: [0mfunction merge_subtrees/2 is unused
-  lib/sheet2.ex:423
-
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ....................................................................................................
 OK: Passed 100 test(s).
 .....................................................................................................
@@ -198,3 +196,46 @@ OK: Passed 100 test(s).
 
 Finished in 0.2 seconds
 9 properties, 34 tests, 1 failure
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+def filter_tree(:tip, _func), do: :tip
+
+  def filter_tree({:node, left, value, right}, func) do
+    IO.puts("Procesando nodo con valor: #{value}")
+
+    new_left = filter_tree(left, func)
+    new_right = filter_tree(right, func)
+
+    if func.(value) do
+      IO.puts("Manteniendo nodo: #{value}")
+      {:node, new_left, value, new_right}
+    else
+      IO.puts("Eliminando nodo: #{value}")
+
+      # Volvemos a filtrar el nodo resultante tras la eliminación
+      merged_subtree =
+        case {new_left, new_right} do
+          {:tip, :tip} -> :tip
+          {l, :tip} -> l
+          {:tip, r} -> r
+          {l, r} ->
+            {min_value, updated_right} = extract_min(r)
+            {:node, l, min_value, updated_right}
+        end
+
+      # **Aquí aplicamos filter_tree nuevamente sobre el árbol resultante**
+      filter_tree(merged_subtree, func)
+    end
+  end
+
+  defp extract_min({:node, :tip, value, right}) do
+    IO.puts("Encontrado mínimo en el subárbol: #{value}")
+    {value, right}
+  end
+
+  defp extract_min({:node, left, value, right}) do
+    IO.puts("Buscando mínimo en el subárbol izquierdo...")
+    {min_value, updated_left} = extract_min(left)
+    {min_value, {:node, updated_left, value, right}}
+  end
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
