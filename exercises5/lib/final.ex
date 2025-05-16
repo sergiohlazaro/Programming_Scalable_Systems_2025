@@ -1,7 +1,9 @@
 defmodule Final do
   # --- Exercise 1: Matrix Transpose ---
   def transpose(rows) do
-    rows |> Enum.zip() |> Enum.map(&Tuple.to_list/1)
+    rows
+    |> Enum.zip()
+    |> Enum.map(&Tuple.to_list/1)
   end
 
   # --- Exercise 2: Matrix Product ---
@@ -46,66 +48,82 @@ defmodule Final do
   defmodule GenBank do
     use GenServer
 
-    # API
+    # --- API ---
     def create_bank(name \\ nil) do
-      case name do
-        nil -> GenServer.start_link(__MODULE__, %{})
-        _ -> GenServer.start_link(__MODULE__, %{name: name, accounts: %{}}, name: name)
+      if name == nil do
+        GenServer.start_link(__MODULE__, %{})
+      else
+        GenServer.start_link(__MODULE__, name, name: name)
       end
     end
 
     def new_account(bank, account), do: GenServer.call(bank, {:new_account, account})
-    def deposit(bank, account, amount), do: GenServer.call(bank, {:deposit, account, amount})
-    def withdraw(bank, account, amount), do: GenServer.call(bank, {:withdraw, account, amount})
-    def transfer(bank, from, to, amount), do: GenServer.call(bank, {:transfer, from, to, amount})
+    def withdraw(bank, account, qty), do: GenServer.call(bank, {:withdraw, account, qty})
+    def deposit(bank, account, qty), do: GenServer.call(bank, {:deposit, account, qty})
+    def transfer(bank, from, to, qty), do: GenServer.call(bank, {:transfer, from, to, qty})
     def balance(bank, account), do: GenServer.call(bank, {:balance, account})
 
-    # GenServer Callbacks
+    # --- Callbacks ---
     @impl true
-    def init(state) when is_map(state) do
-      {:ok, Map.put_new(state, :accounts, %{})}
+    def init(name) when is_atom(name) do
+      filename = String.to_charlist("#{name}.dets")
+      :dets.open_file(name, [file: filename])
+      accounts = :dets.foldl(fn {k, v}, acc -> Map.put(acc, k, v) end, %{}, name)
+      {:ok, %{name: name, accounts: accounts}}
     end
 
     @impl true
-    def handle_call({:new_account, account}, _from, %{accounts: accs} = state) do
+    def init(_state) do
+      {:ok, %{name: nil, accounts: %{}}}
+    end
+
+    defp persist(nil, _k, _v), do: :ok
+    defp persist(name, k, v), do: :dets.insert(name, {k, v})
+
+    @impl true
+    def handle_call({:new_account, account}, _from, %{name: name, accounts: accs} = state) do
       if Map.has_key?(accs, account) do
         {:reply, false, state}
       else
         new_accs = Map.put(accs, account, 0)
+        persist(name, account, 0)
         {:reply, true, %{state | accounts: new_accs}}
       end
     end
 
-    @impl true
-    def handle_call({:deposit, account, amount}, _from, %{accounts: accs} = state) do
+    def handle_call({:withdraw, account, qty}, _from, %{name: name, accounts: accs} = state) do
       current = Map.get(accs, account, 0)
-      new_balance = current + amount
-      {:reply, new_balance, %{state | accounts: Map.put(accs, account, new_balance)}}
-    end
-
-    @impl true
-    def handle_call({:withdraw, account, amount}, _from, %{accounts: accs} = state) do
-      current = Map.get(accs, account, 0)
-      withdrawn = min(current, amount)
+      withdrawn = min(current, qty)
       new_balance = current - withdrawn
-      {:reply, withdrawn, %{state | accounts: Map.put(accs, account, new_balance)}}
+      persist(name, account, new_balance)
+      new_accs = Map.put(accs, account, new_balance)
+      {:reply, withdrawn, %{state | accounts: new_accs}}
     end
 
-    @impl true
-    def handle_call({:transfer, from, to, amount}, _from, %{accounts: accs} = state) do
+    def handle_call({:deposit, account, qty}, _from, %{name: name, accounts: accs} = state) do
+      current = Map.get(accs, account, 0)
+      new_balance = current + qty
+      persist(name, account, new_balance)
+      new_accs = Map.put(accs, account, new_balance)
+      {:reply, new_balance, %{state | accounts: new_accs}}
+    end
+
+    def handle_call({:transfer, from, to, qty}, _from, %{name: name, accounts: accs} = state) do
       bfrom = Map.get(accs, from, 0)
       bto = Map.get(accs, to, 0)
-      moved = min(bfrom, amount)
+      moved = min(bfrom, qty)
 
       new_accs =
         accs
         |> Map.put(from, bfrom - moved)
         |> Map.put(to, bto + moved)
 
+      persist(name, from, bfrom - moved)
+      persist(name, to, bto + moved)
+
       {:reply, moved, %{state | accounts: new_accs}}
     end
 
-    @impl true
     def handle_call({:balance, account}, _from, %{accounts: accs} = state) do
       {:reply, Map.get(accs, account, 0), state}
     end

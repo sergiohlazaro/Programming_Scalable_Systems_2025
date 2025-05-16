@@ -1,4 +1,4 @@
-defmodule Exercises5Test do
+defmodule FinalTest do
   require Logger
 
   use ExUnit.Case, async: false
