@@ -171,10 +171,11 @@ defmodule Final do
     end
 
     def handle_call({:transfer, from, to, qty}, _from, %{name: name, accounts: accs} = state) do
+      IO.puts("[handle_call:transfer] from=#{from}, to=#{to}, qty=#{qty}")
+
       if Map.has_key?(accs, from) and Map.has_key?(accs, to) do
-        IO.puts("[handle_call:transfer] from=#{from}, to=#{to}, qty=#{qty}")
-        bfrom = Map.get(accs, from, 0)
-        bto = Map.get(accs, to, 0)
+        bfrom = Map.get(accs, from)
+        bto = Map.get(accs, to)
         moved = min(bfrom, qty)
 
         new_accs =
@@ -187,6 +188,7 @@ defmodule Final do
 
         {:reply, moved, %{state | accounts: new_accs}}
       else
+        IO.puts("[transfer] ERROR: either #{from} or #{to} account does not exist")
         {:reply, 0, state}
       end
     end
