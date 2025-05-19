@@ -90,13 +90,33 @@ defmodule Final do
     end
 
     # --- Callbacks ---
+    #@impl true
+    #def init(%{name: name} = state) when is_atom(name) do
+    #  IO.puts("[GenBank.init] loading state from DETS for #{name}")
+    #  filename = String.to_charlist("#{name}.dets")
+    #  :dets.open_file(name, [file: filename])
+    #  accounts = :dets.foldl(fn {k, v}, acc -> Map.put(acc, k, v) end, %{}, name)
+    #  {:ok, %{state | accounts: accounts}}
+    #end
+
     @impl true
-    def init(%{name: name} = state) when is_atom(name) do
-      IO.puts("[GenBank.init] loading state from DETS for #{name}")
-      filename = String.to_charlist("#{name}.dets")
-      :dets.open_file(name, [file: filename])
-      accounts = :dets.foldl(fn {k, v}, acc -> Map.put(acc, k, v) end, %{}, name)
-      {:ok, %{state | accounts: accounts}}
+    def init(%{name: name} = state) do
+      if is_atom(name) and name != nil do
+        IO.puts("[GenBank.init] loading state from DETS for #{name}")
+        filename = "#{name}.dets"
+
+        if File.exists?(filename) do
+          IO.puts("[GenBank.init] deleting existing file #{filename}")
+          File.rm!(filename)
+        end
+
+        :dets.open_file(name, [file: String.to_charlist(filename)])
+        accounts = :dets.foldl(fn {k, v}, acc -> Map.put(acc, k, v) end, %{}, name)
+        {:ok, %{state | accounts: accounts}}
+      else
+        IO.puts("[GenBank.init] initializing unnamed bank (non-persistent)")
+        {:ok, %{state | accounts: %{}}}
+      end
     end
 
     @impl true
@@ -124,44 +144,60 @@ defmodule Final do
     end
 
     def handle_call({:withdraw, account, qty}, _from, %{name: name, accounts: accs} = state) do
-      IO.puts("[handle_call:withdraw] account=#{account}, qty=#{qty}")
-      current = Map.get(accs, account, 0)
-      withdrawn = min(current, qty)
-      new_balance = current - withdrawn
-      persist(name, account, new_balance)
-      new_accs = Map.put(accs, account, new_balance)
-      {:reply, withdrawn, %{state | accounts: new_accs}}
+      if Map.has_key?(accs, account) do
+        IO.puts("[handle_call:withdraw] account=#{account}, qty=#{qty}")
+        current = Map.get(accs, account, 0)
+        withdrawn = min(current, qty)
+        new_balance = current - withdrawn
+        persist(name, account, new_balance)
+        new_accs = Map.put(accs, account, new_balance)
+        {:reply, withdrawn, %{state | accounts: new_accs}}
+      else
+        {:reply, 0, state}
+      end
     end
 
     def handle_call({:deposit, account, qty}, _from, %{name: name, accounts: accs} = state) do
-      IO.puts("[handle_call:deposit] account=#{account}, qty=#{qty}")
-      current = Map.get(accs, account, 0)
-      new_balance = current + qty
-      persist(name, account, new_balance)
-      new_accs = Map.put(accs, account, new_balance)
-      {:reply, new_balance, %{state | accounts: new_accs}}
+      if Map.has_key?(accs, account) do
+        IO.puts("[handle_call:deposit] account=#{account}, qty=#{qty}")
+        current = Map.get(accs, account, 0)
+        new_balance = current + qty
+        persist(name, account, new_balance)
+        new_accs = Map.put(accs, account, new_balance)
+        {:reply, new_balance, %{state | accounts: new_accs}}
+      else
+        {:reply, 0, state}
+      end
     end
 
     def handle_call({:transfer, from, to, qty}, _from, %{name: name, accounts: accs} = state) do
-      IO.puts("[handle_call:transfer] from=#{from}, to=#{to}, qty=#{qty}")
-      bfrom = Map.get(accs, from, 0)
-      bto = Map.get(accs, to, 0)
-      moved = min(bfrom, qty)
+      if Map.has_key?(accs, from) and Map.has_key?(accs, to) do
+        IO.puts("[handle_call:transfer] from=#{from}, to=#{to}, qty=#{qty}")
+        bfrom = Map.get(accs, from, 0)
+        bto = Map.get(accs, to, 0)
+        moved = min(bfrom, qty)
 
-      new_accs =
-        accs
-        |> Map.put(from, bfrom - moved)
-        |> Map.put(to, bto + moved)
+        new_accs =
+          accs
+          |> Map.put(from, bfrom - moved)
+          |> Map.put(to, bto + moved)
 
-      persist(name, from, bfrom - moved)
-      persist(name, to, bto + moved)
+        persist(name, from, bfrom - moved)
+        persist(name, to, bto + moved)
 
-      {:reply, moved, %{state | accounts: new_accs}}
+        {:reply, moved, %{state | accounts: new_accs}}
+      else
+        {:reply, 0, state}
+      end
     end
 
     def handle_call({:balance, account}, _from, %{accounts: accs} = state) do
-      IO.puts("[handle_call:balance] account=#{account}")
-      {:reply, Map.get(accs, account, 0), state}
+      if Map.has_key?(accs, account) do
+        IO.puts("[handle_call:balance] account=#{account}")
+        {:reply, Map.get(accs, account, 0), state}
+      else
+        {:reply, 0, state}
+      end
     end
   end
 
