@@ -104,12 +104,6 @@ defmodule Final do
       if is_atom(name) and name != nil do
         IO.puts("[GenBank.init] loading state from DETS for #{name}")
         filename = "#{name}.dets"
-
-        if File.exists?(filename) do
-          IO.puts("[GenBank.init] deleting existing file #{filename}")
-          File.rm!(filename)
-        end
-
         :dets.open_file(name, [file: String.to_charlist(filename)])
         accounts = :dets.foldl(fn {k, v}, acc -> Map.put(acc, k, v) end, %{}, name)
         {:ok, %{state | accounts: accounts}}
@@ -188,7 +182,7 @@ defmodule Final do
 
         {:reply, moved, %{state | accounts: new_accs}}
       else
-        IO.puts("[transfer] ERROR: either #{from} or #{to} account does not exist")
+        IO.puts("[transfer] ERROR: account #{from} or #{to} does not exist")
         {:reply, 0, state}
       end
     end
