@@ -1,4 +1,5 @@
 - Apunte:
+
     * Limpia la compilación anterior
 
         $mix clean
