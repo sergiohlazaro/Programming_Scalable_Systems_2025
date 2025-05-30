@@ -1,4 +1,5 @@
 1. Características Claves de Elixir
+
 ✅ Funcional
     - No hay estado mutable como en lenguajes orientados a objetos.
     - Todo se trata como expresiones matemáticas.
